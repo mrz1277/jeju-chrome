@@ -1,0 +1,15 @@
+{
+  "name": "jeju-chrome",
+  "version": "0.0.0",
+  "authors": [
+    "yakiyama-iMac <mrz1277@gmail.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "moment": "~2.10.2",
+    "jquery": "~2.1.3",
+    "tooltipster": "~3.3.0",
+    "watch": "*",
+    "loaders.css": "~0.1.1"
+  }
+}
