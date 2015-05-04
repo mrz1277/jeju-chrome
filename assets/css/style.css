@@ -249,3 +249,11 @@ a.photo-credits .credits-text {
     color: #FFF;
     margin: 0 0 50px;
 }
+
+.cal-heatmap-container {
+    display: inline;
+}
+
+.cal-heatmap {
+    text-align: center;
+}
