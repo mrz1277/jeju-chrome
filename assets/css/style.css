@@ -70,12 +70,12 @@ header .col-right {
     width: 20px;
 }
 
-.btn-refresh-location,.btn-info {
+.btn-tooltip {
     border-radius: 50px;
     opacity: 0.5;
 }
 
-.btn-refresh-location:hover,.btn-info:hover {
+.btn-tooltip:hover {
     opacity: 1;
 }
 
@@ -172,7 +172,7 @@ header .col-right {
 
 .deal .origin {
     display: block;
-    font-size: 14px;
+    font-size: 20px;
 }
 
 .deal a.btn-tickets {
@@ -250,10 +250,69 @@ a.photo-credits .credits-text {
     margin: 0 0 50px;
 }
 
-.cal-heatmap-container {
-    display: inline;
+/* cal-heatmap */
+
+#cal-heatmap {
+    display: inline-block;
 }
 
-.cal-heatmap {
-    text-align: center;
+.cal-heatmap-container .graph-label {
+    fill: white;
+    font-size: 14px;
+}
+
+.cal-heatmap-container .graph {
+    font-family: 'Hanna', "Helvetica Neue", sans-serif;
+}
+
+.cal-heatmap-container .subdomain-text {
+    fill: #646464;
+    font-size: 9px;
+}
+
+.cal-heatmap-container .graph-rect {
+    fill: #bebebe;
+}
+
+.graph-subdomain-group rect{
+    cursor: pointer;
+}
+
+rect.r1 {
+    fill: #2ECC71;
+}
+
+rect.r2 {
+    fill: #F1C40F;
+}
+
+rect.r3 {
+    fill: #E67E22;
+}
+
+rect.r4 {
+    fill: #E74C3C;
+}
+
+.cal-heatmap-container rect.highlight {
+    stroke: red;
+}
+
+.cal-legend span {
+    font-size: 14px;
+    padding: 5px 10px;
+    color: #3b3b3b;
+}
+
+.cal-legend span.r1 {
+    background-color: #2ECC71;
+}
+.cal-legend span.r2 {
+    background-color: #F1C40F;
+}
+.cal-legend span.r3 {
+    background-color: #E67E22;
+}
+.cal-legend span.r4 {
+    background-color: #E74C3C;
 }

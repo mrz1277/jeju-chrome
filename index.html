@@ -9,12 +9,12 @@
   <link href="assets/css/style.css" rel="stylesheet">
 
   <script src="assets/lib/jquery/dist/jquery.min.js"></script>
-  <script src="assets/lib/moment/min/moment.min.js"></script>
+  <script src="assets/lib/moment/min/moment-with-locales.min.js"></script>
   <script src="assets/lib/tooltipster/js/jquery.tooltipster.min.js"></script>
   <script src="assets/lib/watch/src/watch.min.js"></script>
   <script src="assets/lib/d3/d3.min.js"></script>
   <script src="assets/lib/cal-heatmap/cal-heatmap.min.js"></script>
-  <script src="assets/js/app2.js"></script>
+  <script src="assets/js/app.js"></script>
 
 </head>
 <body>
@@ -22,27 +22,28 @@
   <div class="container">
     <div class="col-left">
       <!--<a href="" class="logo" id="HitlistLogo">-->
-        <!--<img src="assets/img/hitlist-flights-logo.svg" alt="Hitlist Flights" />-->
+        <!--<img src="assets/img/icon.png" alt="Hitlist Flights" />-->
       <!--</a>-->
     </div>
     <div class="col-right">
-      <a title="위치 갱신" class="btn btn-refresh-location tooltip" id="refreshLocation">
+      <a title="내 위치 갱신" class="btn btn-tooltip tooltip" id="refreshLocation">
         <img src="assets/img/navigate.png" />
       </a>
-      <a title="정보" class="btn btn-info" id="WandertabInfo">
-        <img src="assets/img/ios7-information-empty.png" />
+      <a title="공항 변경" class="btn btn-tooltip tooltip" id="changeAirport">
+        <img src="assets/img/airport.png" />
       </a>
     </div>
   </div>
 </header>
 <section id="deal" class="deal">
-  <div id="cal-heatmap"></div>
-  <a href="" class="deal-link" id="flights">
-    <h1></h1>
-    <h2></h2>
-  </a>
+  <div class="cal-legend">
+    <span class="r1">~ 4만원</span>
+    <span class="r2">~ 6만원</span>
+    <span class="r3">~ 8만원</span>
+  </div>
+  <div id="cal-heatmap">
+  </div>
   <span class="origin"></span>
-  <a href="" class="btn-tickets deal-link" id="flights">flights</a>
   <a class="photo-credits" id="photoCredits"><span class="credits-text">foto by me</span></a>
 </section>
 <div id="bg" class="bg"></div>

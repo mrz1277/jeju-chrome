@@ -7,6 +7,12 @@ _gaq.push(['_setAccount', 'UA-62234040-1']);
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 
+// global
+var _data, _deal;
+var _cal = new CalHeatMap();
+
+moment.locale("ko");
+
 var WT = {
   init: function() {
     WT.version = "1.1.5";
@@ -29,7 +35,7 @@ var WT = {
 
     $.when(WT.getOriginAirport()).then(function() {
       WT.nextDeal();
-      $(".btn-refresh-location").on("click", function() {
+      $("#refreshLocation").on("click", function() {
         WT.refreshOriginAirport().done(WT.nextDeal);
       });
       $(".btn-shuffle").on("click", function() {
@@ -38,7 +44,6 @@ var WT = {
     });
 
     $("#HitlistLogo").attr("href", "http://www.hitlistapp.com/flights/" + WT.utm_params);
-    $("#WandertabInfo").attr("href", "http://www.hitlistapp.com/wandertab/" + WT.utm_params);
     $("a").on("click", function(a) {
       _gaq.push(["_trackEvent", a.target.id, "clicked"]);
     });
@@ -78,7 +83,7 @@ var WT = {
   },
   getClosestAirport: function(location) {
     var deferred = $.Deferred();
-    var url = "http://www.hitlistapp.com/flights/api/airports/near/";
+    var url = "http://localhost:3000/airports/near/";
 
     if (location.coords) {
       url = url + "?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude;
@@ -113,8 +118,9 @@ var WT = {
   getDeal: function() {
     var deferred = $.Deferred();
 
-    $.getJSON("http://www.hitlistapp.com/flights/api/deal/?v=1&airport=" + WT.originAirport.iata_code).done(function(deal) {
+    $.getJSON("http://localhost:3000/deal?airport=" + WT.originAirport.iata_code).done(function(deal) {
       deal.timeStamp = Date.now();
+      _deal = deal;
       WT.preLoadDealImage(deal);
       deferred.resolve(deal);
     }).fail(function(error) {
@@ -124,7 +130,7 @@ var WT = {
     return deferred;
   },
   preLoadDealImage: function(deal) {
-    $("#hiddenImage").attr("src", deal.destination.photos.photo_details);
+    $("#hiddenImage").attr("src", deal.photo.url);
   },
   hideDeal: function() {
     var deferred = $.Deferred();
@@ -142,29 +148,27 @@ var WT = {
   },
   displayDeal: function(deal) {
     $("#deal").removeClass("visible");
-    $("#bg").css("background-image", "url(" + deal.destination.photos.photo_details + ")");
-    $("#deal h1").text(deal.price.formatted);
-    $("#deal h2").text(deal.destination.city_name + ", " + deal.destination.country_name);
-    $("#deal .origin").text("from " + deal.origin.city_name + " (" + deal.origin.iata_code + ")");
+    $("#bg").css("background-image", "url(" + deal.photo.url + ")");
+    $("#deal .origin").text(deal.suggestion.format);
 
-    var detailUrl = deal.details_link + WT.utm_params;
-    $("#deal a.deal-link").attr("href", detailUrl);
-
-    if (deal.destination.photos.photo_citation) {
-      $("#deal a.photo-credits").css("display", "block").attr("href", deal.destination.photos.photo_link);
-      $("#deal a.photo-credits span").text(deal.destination.photos.photo_citation)
+    if (deal.photo.citation) {
+      $("#deal a.photo-credits").css("display", "block").attr("href", deal.photo.external_link);
+      $("#deal a.photo-credits span").text(deal.photo.citation)
     } else {
       $("#deal a.photo-credits").css("display", "none");
-      $("#deal").addClass("visible");
-      WT.hideLoader();
-      WT.initializing = false;
     }
+
+    $("#deal").addClass("visible");
+    WT.hideLoader();
+    WT.initializing = false;
+
   },
   removeOldDeals: function(deals) {
     var oldDeals = [];
     var hour = 3600000;
     var now = Date.now();
     for (i = 0; i < deals.length; ++i) {
+
       deals[i].timeStamp + hour > now && oldDeals.push(deals[i]);
     }
     return oldDeals;
@@ -185,5 +189,63 @@ $(document).ready(function() {
   $(".tooltip").tooltipster({
     position: "left",
     delay: 0
+  });
+
+  _cal.init({
+    itemSelector: "#cal-heatmap",
+    domain: "month",
+    subDomain: "x_day",
+    data: "http://localhost:3000/flights?airport=" + WT.originAirport.iata_code + "&start={{d:start}}&end={{d:end}}",
+    cellSize: 20,
+    cellPadding: 5,
+    domainGutter: 20,
+    range: 2,
+    label: {
+      position: "top"
+    },
+    tooltip: true,
+    weekStartOnMonday: false,
+    domainDynamicDimension: false,
+    domainLabelFormat: function(date) {
+      return moment(date).format("MMMM").toUpperCase();
+    },
+    subDomainTextFormat: "%e",
+    subDomainDateFormat: function(date) {
+      return moment(_data[date]).format('HH:mm');
+    },
+    subDomainTitleFormat: {
+      empty: "일정 없음",
+      filled: "{count}원 {date} 출발"
+    },
+    displayLegend: false,
+    legendVerticalPosition: "top",
+    legendHorizontalPosition: "center",
+    legendColors: {
+      min: "white",
+      max: "black"
+    },
+    legend: [40000, 60000, 80000],
+    afterLoadData: function(data) {
+      var newData = {};
+      var parse = {};
+      for (var i in data) {
+        var dateTime = data[i].date;
+        parse[dateTime] = data[i].price;
+        newData[moment(dateTime, 'X').startOf('day').toDate()] = moment(dateTime, 'X').toDate();
+      }
+      _data = newData;
+
+      return parse;
+    },
+    onComplete: function() {
+      var dates = [];
+      var depart = moment(_deal.suggestion.depart_date).startOf('day');
+      var arrive = moment(_deal.suggestion.return_date).startOf('day');
+      while (depart.isBefore(arrive) || depart.isSame(arrive)) {
+        dates.push(moment(depart).toDate());
+        depart.add(1, 'day');
+      }
+      _cal.highlight(dates);
+    }
   });
 });
