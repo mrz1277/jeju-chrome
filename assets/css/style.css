@@ -316,3 +316,7 @@ rect.r4 {
 .cal-legend span.r4 {
     background-color: #E74C3C;
 }
+
+text.highlight {
+    fill: red;
+}
