@@ -8,8 +8,9 @@ _gaq.push(['_setAccount', 'UA-62234040-1']);
 })();
 
 // global
-var _data, _deal;
 var _cal = new CalHeatMap();
+var _clickedDate;
+var _currentData;
 
 moment.locale("ko");
 
@@ -120,7 +121,6 @@ var WT = {
 
     $.getJSON("http://localhost:3000/deal?airport=" + WT.originAirport.iata_code).done(function(deal) {
       deal.timeStamp = Date.now();
-      _deal = deal;
       WT.preLoadDealImage(deal);
       deferred.resolve(deal);
     }).fail(function(error) {
@@ -153,15 +153,27 @@ var WT = {
 
     if (deal.photo.citation) {
       $("#deal a.photo-credits").css("display", "block").attr("href", deal.photo.external_link);
-      $("#deal a.photo-credits span").text(deal.photo.citation)
+      $("#deal a.photo-credits span").text(deal.photo.citation);
     } else {
       $("#deal a.photo-credits").css("display", "none");
+    }
+
+    if (deal.photo.location) {
+      $("#deal a.photo-location span").text(deal.photo.location);
+      if (deal.photo.latitude && deal.photo.longitude) {
+        var url = 'http://map.naver.com/?menu=location&mapMode=0&lat=' +
+          deal.photo.latitude + '&lng=' + deal.photo.longitude + '&dlevel=11&enc=b64';
+        $("#deal a.photo-location").css("display", "block").attr("href", url);
+      } else {
+        $("#deal a.photo-location").css("border", "none").css("cursor", "none");
+      }
+    } else {
+      $("#deal a.photo-location").css("display", "none");
     }
 
     $("#deal").addClass("visible");
     WT.hideLoader();
     WT.initializing = false;
-
   },
   removeOldDeals: function(deals) {
     var oldDeals = [];
@@ -180,6 +192,16 @@ var WT = {
   },
   hideLoader: function() {
     $(".loading").stop().fadeOut(300);
+  },
+  highlightCalendar: function(start, end) {
+    var dates = [];
+    var depart = moment(start).startOf('day');
+    var arrive = moment(end).startOf('day');
+    while (depart.isBefore(arrive) || depart.isSame(arrive)) {
+      dates.push(moment(depart).toDate());
+      depart.add(1, 'day');
+    }
+    _cal.highlight(dates);
   }
 };
 
@@ -211,7 +233,10 @@ $(document).ready(function() {
     },
     subDomainTextFormat: "%e",
     subDomainDateFormat: function(date) {
-      return moment(_data[date]).format('HH:mm');
+      var data = _clickedDate ? JSON.parse(localStorage.getItem("returnDate"))
+        : JSON.parse(localStorage.getItem("departDate"));
+
+      return moment(data[moment(date).format('X')]).format('HH:mm');
     },
     subDomainTitleFormat: {
       empty: "일정 없음",
@@ -226,26 +251,61 @@ $(document).ready(function() {
     },
     legend: [40000, 60000, 80000],
     afterLoadData: function(data) {
-      var newData = {};
-      var parse = {};
-      for (var i in data) {
-        var dateTime = data[i].date;
-        parse[dateTime] = data[i].price;
-        newData[moment(dateTime, 'X').startOf('day').toDate()] = moment(dateTime, 'X').toDate();
-      }
-      _data = newData;
+      var departPrice = {}, departDate = {};
+      var returnPrice = {}, returnDate = {};
 
-      return parse;
+      data.depart.forEach(function(d) {
+        departPrice[d.date] = d.price;
+        departDate[moment(d.date, 'X').startOf('day').toDate()] = moment(d.date, 'X').toDate();
+      });
+
+      data.return.forEach(function(d) {
+        returnPrice[d.date] = d.price;
+        returnDate[moment(d.date, 'X').startOf('day').toDate()] = moment(d.date, 'X').toDate();
+      });
+
+      localStorage.setItem("departPrice", JSON.stringify(departPrice));
+      localStorage.setItem("returnPrice", JSON.stringify(returnPrice));
+      localStorage.setItem("departDate", JSON.stringify(departDate));
+      localStorage.setItem("returnDate", JSON.stringify(returnDate));
+
+      return departPrice;
+      //var parse = {};
+      //for (var i in data) {
+      //  var dateTime = data[i].date;
+      //  parse[dateTime] = data[i].price;
+      //  newData[moment(dateTime, 'X').startOf('day').toDate()] = moment(dateTime, 'X').toDate();
+      //}
+      //localStorage.setItem("data", JSON.stringify(data));
+      //
+      //return parse;
     },
     onComplete: function() {
-      var dates = [];
-      var depart = moment(_deal.suggestion.depart_date).startOf('day');
-      var arrive = moment(_deal.suggestion.return_date).startOf('day');
-      while (depart.isBefore(arrive) || depart.isSame(arrive)) {
-        dates.push(moment(depart).toDate());
-        depart.add(1, 'day');
+      var deals = JSON.parse(localStorage.getItem("newDeals"));
+      if (deals && deals.length > 0) {
+        var deal = deals[0];
+        WT.highlightCalendar(deal.suggestion.depart_date, deal.suggestion.return_date);
       }
-      _cal.highlight(dates);
+    },
+    onClick: function(date, value) {
+      if (_clickedDate) {
+        if (moment(date).isSame(_clickedDate)) {
+          _cal.highlight(new Date(2000,1,1));
+          // 초기화
+        } else {
+          WT.highlightCalendar(_clickedDate, date);
+          // 리턴일 선택함
+        }
+        _clickedDate = undefined;
+
+        _cal.update(JSON.parse(localStorage.getItem("departPrice")), false);
+      } else {
+        _clickedDate = date;
+        _cal.highlight(date);
+        // 출발일 선택함
+
+        _cal.update(JSON.parse(localStorage.getItem("returnPrice")), false);
+      }
     }
   });
 });

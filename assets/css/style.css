@@ -104,7 +104,7 @@ header .col-right {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#40000000',GradientType=0 );
 }
 
-.deal h1,.deal h2,.deal .origin,.deal a.btn-tickets,.deal a.photo-credits {
+.deal h1,.deal h2,.deal .origin,.deal a.btn-tickets,.deal a.photo-credits,.deal a.photo-location {
     opacity: 0;
     -webkit-transform: translateY(5px);
     -moz-transform: translateY(5px);
@@ -123,7 +123,7 @@ header .col-right {
     transition-delay: 0s;
 }
 
-.deal.visible,.deal.visible h1,.deal.visible h2,.deal.visible .origin,.deal.visible a.btn-tickets,.deal.visible a.photo-credits {
+.deal.visible,.deal.visible h1,.deal.visible h2,.deal.visible .origin,.deal.visible a.btn-tickets,.deal.visible a.photo-credits, .deal.visible a.photo-location {
     opacity: 1;
     -webkit-transform: translateY(0px);
     -moz-transform: translateY(0px);
@@ -150,7 +150,7 @@ header .col-right {
     transition: all 0.3s ease-in-out;
 }
 
-.deal.visible a.btn-tickets,.deal.visible a.photo-credits {
+.deal.visible a.btn-tickets,.deal.visible a.photo-credits,.deal.visible a.photo-location {
     -webkit-transition: all 0.4s ease-in-out;
     -moz-transition: all 0.4s ease-in-out;
     transition: all 0.4s ease-in-out;
@@ -219,10 +219,23 @@ a.photo-credits {
     text-decoration: none;
     height: 24px;
     min-width: 9px;
-    background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMyIgaGVpZ2h0PSIxMCIgdmlld0JveD0iMCAwIDEzIDEwIj48cGF0aCBkPSJNMTEuOTUgMS41OTRIOS44NEw4LjU4LjMyUzguNTc0LjMxMyA4LjU3LjMxM0w4LjU2My4zMDZDOC4zNzUuMTIgOC4xMjMgMCA3LjgzMyAwSDUuMjFjLS4zMDcgMC0uNTguMTMtLjc3LjM0di4wMDRsLTEuMjM0IDEuMjVIMS4wNUMuNDcgMS41OTQgMCAyLjA1IDAgMi42M3Y2LjMxNkMwIDkuNTI4LjQ3IDEwIDEuMDUgMTBoMTAuOWMuNTc4IDAgMS4wNS0uNDcyIDEuMDUtMS4wNTNWMi42M2MwLS41OC0uNDcyLTEuMDM2LTEuMDUtMS4wMzZ6TTYuNSA4LjQyMmMtMS41OSAwLTIuODg4LTEuMy0yLjg4OC0yLjg5NCAwLTEuNTk3IDEuMjk3LTIuODk0IDIuODg4LTIuODk0IDEuNTk0IDAgMi44ODggMS4yOTcgMi44ODggMi44OTQgMCAxLjU5NC0xLjI5NCAyLjg5NC0yLjg4OCAyLjg5NHptNS4yNTMtNS4xNTZjLS4yNCAwLS40MzgtLjE5Ny0uNDM4LS40NCAwLS4yNDQuMTk3LS40NC40MzgtLjQ0LjI0IDAgLjQzOC4xOTYuNDM4LjQ0IDAgLjI0My0uMTk1LjQ0LS40MzYuNDR6TTYuNSAzLjM0Yy0xLjIwNiAwLTIuMTguOTgtMi4xOCAyLjE5IDAgMS4yMDUuOTc0IDIuMTg3IDIuMTggMi4xODcgMS4yMDMgMCAyLjE4LS45OCAyLjE4LTIuMTg4IDAtMS4yMS0uOTc3LTIuMTktMi4xOC0yLjE5eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==) no-repeat 10px;
 }
 
-a.photo-credits .credits-text {
+a.photo-location {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    padding: 3px 10px 3px 26px;
+    border: 2px solid #fff;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 12px;
+    text-decoration: none;
+    height: 24px;
+    min-width: 9px;
+}
+
+a.photo-credits .credits-text, a.photo-location .location-text {
     display: block;
     padding: 4px;
 }
@@ -253,6 +266,8 @@ a.photo-credits .credits-text {
 /* cal-heatmap */
 
 #cal-heatmap {
+    width: 365px;
+    height: 185px;
     display: inline-block;
 }
 
@@ -317,6 +332,32 @@ rect.r4 {
     background-color: #E74C3C;
 }
 
-text.highlight {
+.cal-heatmap-container rect.highlight {
+    stroke-width: 2;
+}
+
+.cal-heatmap-container .graph-subdomain-group rect:hover {
+    stroke-width: 2;
+}
+
+.cal-heatmap-container text.highlight {
     fill: red;
+}
+
+.fa.fa-camera {
+    position: absolute;
+    left: 10px;
+    top: 9px;
+}
+
+.fa.fa-map-marker {
+    position: absolute;
+    left: 13px;
+    top: 8px;
+}
+
+.btn-tooltip .fa {
+    text-align: center;
+    width: 20px;
+    height: 20px;
 }

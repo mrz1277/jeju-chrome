@@ -11,6 +11,7 @@
     "tooltipster": "~3.3.0",
     "watch": "*",
     "loaders.css": "~0.1.1",
-    "cal-heatmap": "~3.5.2"
+    "cal-heatmap": "~3.5.2",
+    "font-awesome": "~4.3.0"
   }
 }

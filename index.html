@@ -5,6 +5,7 @@
 
   <link href="assets/lib/loaders.css/loaders.min.css" rel="stylesheet">
   <link href="assets/lib/cal-heatmap/cal-heatmap.css" rel="stylesheet">
+  <link href="assets/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="assets/css/tooltipster.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
 
@@ -27,10 +28,10 @@
     </div>
     <div class="col-right">
       <a title="내 위치 갱신" class="btn btn-tooltip tooltip" id="refreshLocation">
-        <img src="assets/img/navigate.png" />
+        <i class="fa fa-location-arrow"></i>
       </a>
-      <a title="공항 변경" class="btn btn-tooltip tooltip" id="changeAirport">
-        <img src="assets/img/airport.png" />
+      <a title="설정" class="btn btn-tooltip tooltip" id="changeAirport">
+        <i class="fa fa-cog"></i>
       </a>
     </div>
   </div>
@@ -41,10 +42,11 @@
     <span class="r2">~ 6만원</span>
     <span class="r3">~ 8만원</span>
   </div>
-  <div id="cal-heatmap">
-  </div>
+  <div id="cal-heatmap"></div>
   <span class="origin"></span>
-  <a class="photo-credits" id="photoCredits"><span class="credits-text">foto by me</span></a>
+  <a href="" class="btn-tickets deal-link" id="flights">예약하기</a>
+  <a class="photo-credits" target="_blank"><i class="fa fa-camera"></i><span class="credits-text"></span></a>
+  <a class="photo-location" target="_blank"><i class="fa fa-map-marker"></i><span class="location-text"></span></a>
 </section>
 <div id="bg" class="bg"></div>
 <img class="hidden" id="hiddenImage">
