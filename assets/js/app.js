@@ -10,7 +10,6 @@ _gaq.push(['_setAccount', 'UA-62234040-1']);
 // global
 var _cal = new CalHeatMap();
 var _clickedDate;
-var _currentData;
 
 moment.locale("ko");
 
@@ -149,7 +148,7 @@ var WT = {
   displayDeal: function(deal) {
     $("#deal").removeClass("visible");
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
-    $("#deal .origin").text(deal.suggestion.format);
+    $("#deal .origin").html(deal.suggestion.format);
 
     if (deal.photo.citation) {
       $("#deal a.photo-credits").css("display", "block").attr("href", deal.photo.external_link);
@@ -256,12 +255,12 @@ $(document).ready(function() {
 
       data.depart.forEach(function(d) {
         departPrice[d.date] = d.price;
-        departDate[moment(d.date, 'X').startOf('day').toDate()] = moment(d.date, 'X').toDate();
+        departDate[moment(d.date, 'X').startOf('day').format('X')] = moment(d.date, 'X').toDate();
       });
 
       data.return.forEach(function(d) {
         returnPrice[d.date] = d.price;
-        returnDate[moment(d.date, 'X').startOf('day').toDate()] = moment(d.date, 'X').toDate();
+        returnDate[moment(d.date, 'X').startOf('day').format('X')] = moment(d.date, 'X').toDate();
       });
 
       localStorage.setItem("departPrice", JSON.stringify(departPrice));
@@ -270,15 +269,6 @@ $(document).ready(function() {
       localStorage.setItem("returnDate", JSON.stringify(returnDate));
 
       return departPrice;
-      //var parse = {};
-      //for (var i in data) {
-      //  var dateTime = data[i].date;
-      //  parse[dateTime] = data[i].price;
-      //  newData[moment(dateTime, 'X').startOf('day').toDate()] = moment(dateTime, 'X').toDate();
-      //}
-      //localStorage.setItem("data", JSON.stringify(data));
-      //
-      //return parse;
     },
     onComplete: function() {
       var deals = JSON.parse(localStorage.getItem("newDeals"));
@@ -288,13 +278,23 @@ $(document).ready(function() {
       }
     },
     onClick: function(date, value) {
+      var textFormat;
+
+      var dateData = _clickedDate ? JSON.parse(localStorage.getItem("returnDate"))
+        : JSON.parse(localStorage.getItem("departDate"));
+      var dateFormat = moment(dateData[moment(date).format('X')]).format('D일 HH:mm ');
+
       if (_clickedDate) {
         if (moment(date).isSame(_clickedDate)) {
           _cal.highlight(new Date(2000,1,1));
           // 초기화
+          textFormat = "";
         } else {
           WT.highlightCalendar(_clickedDate, date);
           // 리턴일 선택함
+          textFormat = $('span.origin').html();
+          textFormat += " <i class=\"fa fa-arrows-h\"></i> ";
+          textFormat += dateFormat + value + '원';
         }
         _clickedDate = undefined;
 
@@ -303,9 +303,11 @@ $(document).ready(function() {
         _clickedDate = date;
         _cal.highlight(date);
         // 출발일 선택함
-
+        textFormat = dateFormat + value + '원';
         _cal.update(JSON.parse(localStorage.getItem("returnPrice")), false);
       }
+
+      $('span.origin').html(textFormat);
     }
   });
 });
