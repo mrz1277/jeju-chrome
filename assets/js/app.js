@@ -148,10 +148,8 @@ var WT = {
   displayDeal: function(deal) {
     $("#deal").removeClass("visible");
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
-    $("#deal .origin").html('' +
-      moment(deal.suggestion.depart_date).format('D일 HH:mm ') + deal.suggestion.depart_price + '원' +
-      ' <i class="fa fa-arrows-h"></i> ' +
-      moment(deal.suggestion.return_date).format('D일 HH:mm ') + deal.suggestion.return_price + '원');
+    WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, WT.originAirport.airport_name, '제주');
+    WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, '제주', WT.originAirport.airport_name);
     $('#flights').append('<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + '원)</small>');
 
     if (deal.photo.citation) {
@@ -205,6 +203,12 @@ var WT = {
       depart.add(1, 'day');
     }
     _cal.highlight(dates);
+  },
+  setContent: function(flight, date, price, dep_airport, arr_airport) {
+    $('.'+flight+'-date').text(date ? moment(date).format('D일 HH:mm'): '');
+    $('.'+flight+'-price').text(price ? price + '원' : '');
+    $('.'+flight+'-airport').html(dep_airport && arr_airport ? dep_airport + ' <i class="fa fa-long-arrow-right"></i> ' + arr_airport : '');
+
   }
 };
 
@@ -282,44 +286,38 @@ $(document).ready(function() {
       }
     },
     onClick: function(date, value) {
-      var textFormat;
-
       var dateData = _clickedDate ? JSON.parse(localStorage.getItem("returnDate"))
         : JSON.parse(localStorage.getItem("departDate"));
-      var dateFormat = moment(dateData[moment(date).format('X')]).format('D일 HH:mm ');
+      var dateFormat = moment(dateData[moment(date).format('X')]);
 
       if (_clickedDate) {
+        // 초기화
         if (moment(date).isSame(_clickedDate)) {
           _cal.highlight(new Date(2000,1,1));
-          // 초기화
-          textFormat = "";
+          WT.setContent('depart');
+          WT.setContent('return');
           $('#flights').html('<small>출발일선택</small>');
-        } else {
+        }
+        // 도착일 선택됨
+        else {
           WT.highlightCalendar(_clickedDate, date);
-          // 리턴일 선택함
-          textFormat = $('span.origin').html();
-          textFormat += " <i class=\"fa fa-arrows-h\"></i> ";
-          textFormat += dateFormat + value + '원';
+          WT.setContent('return', dateFormat, value, '제주', WT.originAirport.airport_name);
 
-          var priceArray = /.*\s(\d+)원/.exec($('.origin').text());
-          if (priceArray && priceArray.length === 2) {
-            var priceTotal = parseInt(priceArray[1]) + parseInt(value);
-            $('#flights').html('예약하기<small> (' + priceTotal + '원)</small>');
-          }
+          var priceTotal = parseInt($('.depart-price').text()) + parseInt(value);
+          $('#flights').html('예약하기<small> (' + priceTotal + '원)</small>');
         }
         _clickedDate = undefined;
 
         _cal.update(JSON.parse(localStorage.getItem("departPrice")), false);
-      } else {
+      }
+      // 출발일 선택됨
+      else {
         _clickedDate = date;
         _cal.highlight(date);
-        // 출발일 선택함
-        textFormat = dateFormat + value + '원';
         _cal.update(JSON.parse(localStorage.getItem("returnPrice")), false);
+        WT.setContent('depart', dateFormat, value, WT.originAirport.airport_name, '제주');
         $('#flights').html('<small>도착일선택</small>');
       }
-
-      $('span.origin').html(textFormat);
     }
   });
 });
