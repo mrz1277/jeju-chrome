@@ -148,7 +148,11 @@ var WT = {
   displayDeal: function(deal) {
     $("#deal").removeClass("visible");
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
-    $("#deal .origin").html(deal.suggestion.format);
+    $("#deal .origin").html('' +
+      moment(deal.suggestion.depart_date).format('D일 HH:mm ') + deal.suggestion.depart_price + '원' +
+      ' <i class="fa fa-arrows-h"></i> ' +
+      moment(deal.suggestion.return_date).format('D일 HH:mm ') + deal.suggestion.return_price + '원');
+    $('#flights').append('<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + '원)</small>');
 
     if (deal.photo.citation) {
       $("#deal a.photo-credits").css("display", "block").attr("href", deal.photo.external_link);
@@ -289,12 +293,19 @@ $(document).ready(function() {
           _cal.highlight(new Date(2000,1,1));
           // 초기화
           textFormat = "";
+          $('#flights').html('<small>출발일선택</small>');
         } else {
           WT.highlightCalendar(_clickedDate, date);
           // 리턴일 선택함
           textFormat = $('span.origin').html();
           textFormat += " <i class=\"fa fa-arrows-h\"></i> ";
           textFormat += dateFormat + value + '원';
+
+          var priceArray = /.*\s(\d+)원/.exec($('.origin').text());
+          if (priceArray && priceArray.length === 2) {
+            var priceTotal = parseInt(priceArray[1]) + parseInt(value);
+            $('#flights').html('예약하기<small> (' + priceTotal + '원)</small>');
+          }
         }
         _clickedDate = undefined;
 
@@ -305,6 +316,7 @@ $(document).ready(function() {
         // 출발일 선택함
         textFormat = dateFormat + value + '원';
         _cal.update(JSON.parse(localStorage.getItem("returnPrice")), false);
+        $('#flights').html('<small>도착일선택</small>');
       }
 
       $('span.origin').html(textFormat);

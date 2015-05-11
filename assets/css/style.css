@@ -2,11 +2,11 @@
     font-family: 'Hanna';
     font-style: normal;
     font-weight: 400;
-    src: url(../fonts/BM-HANNA.eot);
-    src: url(../fonts/BM-HANNA.eot?#iefix) format('embedded-opentype'),
-    url(../fonts/BM-HANNA.woff2) format('woff2'),
-    url(../fonts/BM-HANNA.woff) format('woff'),
-    url(../fonts/BM-HANNA.ttf) format('truetype');
+    src: url(../fonts/JejuGothic-Regular.eot);
+    src: url(../fonts/JejuGothic-Regular.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/JejuGothic-Regular.woff2) format('woff2'),
+    url(../fonts/JejuGothic-Regular.woff) format('woff'),
+    url(../fonts/JejuGothic-Regular.ttf) format('truetype');
 }
 
 a {
@@ -30,7 +30,7 @@ body,html {
 
 body {
     background-color: #FFF;
-    font-family: 'Hanna', "Helvetica Neue", sans-serif;
+    font-family: 'Jeju Gothic', "Helvetica Neue", sans-serif;
     font-size: 14pt;
     color: #222;
 }
@@ -173,14 +173,19 @@ header .col-right {
 .deal .origin {
     display: block;
     font-size: 20px;
+    margin: 20px 0;
+    text-shadow: 1px 1px #000000;
 }
 
 .deal a.btn-tickets {
     margin-top: 10px;
 }
 
-.btn-tickets {
+.btn-wraper {
     display: inline-block;
+}
+
+.btn-tickets {
     font-size: 18px;
     background-color: rgba(255,255,255,0.1);
     border: 1px solid #FFF;
@@ -188,6 +193,10 @@ header .col-right {
     padding: 0.3em 1em;
     color: #FFF;
     text-decoration: none;
+    width: 71px;
+    height: 44px;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .btn-tickets:hover {
@@ -277,7 +286,7 @@ a.photo-credits .credits-text, a.photo-location .location-text {
 }
 
 .cal-heatmap-container .graph {
-    font-family: 'Hanna', "Helvetica Neue", sans-serif;
+    font-family: 'Jeju Gothic', "Helvetica Neue", sans-serif;
 }
 
 .cal-heatmap-container .subdomain-text {
@@ -311,6 +320,10 @@ rect.r4 {
 
 .cal-heatmap-container rect.highlight {
     stroke: red;
+}
+
+.cal-legend {
+    margin: 20px 0;
 }
 
 .cal-legend span {
