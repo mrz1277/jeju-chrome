@@ -149,7 +149,8 @@ var WT = {
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
     WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, WT.originAirport.airport_name, '제주');
     WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, '제주', WT.originAirport.airport_name);
-    $('#flights').html('예약하기<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + '원)</small>');
+    $('a.btn-tickets').html('예약하기<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + '원)</small>')
+      .attr('href', 'http://air.jejudo.com');
 
     if (deal.photo.citation) {
       $("#deal a.photo-credits").css("display", "block").attr("href", deal.photo.external_link);
@@ -213,6 +214,10 @@ var WT = {
 
 $(document).ready(function() {
   WT.init();
+
+  $("a.btn-tickets").on('click', function(e) {
+    $(this).attr('href') === '' && e.preventDefault();
+  });
 
   $(".tooltip").tooltipster({
     position: "left",
@@ -292,18 +297,20 @@ $(document).ready(function() {
       if (_clickedDate) {
         // 초기화
         if (moment(date).isSame(_clickedDate)) {
-          _cal.highlight(new Date(2000,1,1));
-          WT.setContent('depart');
-          WT.setContent('return');
-          $('#flights').html('<small>출발일선택</small>');
+          _cal.highlight(new Date(2000,1,1)); // disable highlight
+          WT.setContent('depart'); // depart table contents set to null
+          WT.setContent('return'); // return table contents set to null
+
+          $('a.btn-tickets').html('<small>출발일선택</small>').removeClass('available').attr('href', '');
         }
         // 도착일 선택됨
         else {
-          WT.highlightCalendar(_clickedDate, date);
-          WT.setContent('return', dateFormat, value, '제주', WT.originAirport.airport_name);
+          WT.highlightCalendar(_clickedDate, date); // highlight from depart to return date
+          WT.setContent('return', dateFormat, value, '제주', WT.originAirport.airport_name); // set return table contents
 
           var priceTotal = parseInt($('.depart-price').text()) + parseInt(value);
-          $('#flights').html('예약하기<small> (' + priceTotal + '원)</small>');
+          $('a.btn-tickets').html('예약하기<small> (' + priceTotal + '원)</small>').addClass('available')
+            .attr('href', 'http://air.jejudo.com');
         }
         _clickedDate = undefined;
 
@@ -315,7 +322,7 @@ $(document).ready(function() {
         _cal.highlight(date);
         _cal.update(JSON.parse(localStorage.getItem("returnPrice")), false);
         WT.setContent('depart', dateFormat, value, WT.originAirport.airport_name, '제주');
-        $('#flights').html('<small>도착일선택</small>');
+        $('a.btn-tickets').html('<small>도착일선택</small>').removeClass('available').attr('href', '');
       }
     }
   });

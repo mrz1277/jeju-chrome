@@ -197,9 +197,14 @@ header .col-right {
     height: 44px;
     display: table-cell;
     vertical-align: middle;
+    cursor: default;
 }
 
-.btn-tickets:hover {
+.btn-tickets.available {
+    cursor: pointer;
+}
+
+.btn-tickets.available:hover {
     background-color: rgba(255,255,255,0.2);
 }
 
@@ -383,6 +388,7 @@ table {
 
 td {
     width: 150px;
+    height: 26px;
 }
 
 td:first-child, td:last-child {
