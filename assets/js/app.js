@@ -55,7 +55,7 @@ var WT = {
     WT.originAirport = JSON.parse(localStorage.getItem("originAirport"));
 
     if (WT.originAirport) {
-      deferred.resolve(WT.originAirport);
+      return deferred.resolve(WT.originAirport);
     } else {
       WT.showLoader("Determining the closest airport to you");
       $.when(WT.getMyLocation().pipe(WT.getClosestAirport, WT.getClosestAirport)).then(function(airport) {
@@ -63,9 +63,8 @@ var WT = {
         localStorage.setItem("originAirport", JSON.stringify(airport));
         deferred.resolve();
       });
-      deferred.promise();
+      return deferred.promise();
     }
-    return WT.originAirport;
   },
   refreshOriginAirport: function() {
     localStorage.setItem("originAirport", null);
@@ -150,7 +149,7 @@ var WT = {
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
     WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, WT.originAirport.airport_name, '제주');
     WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, '제주', WT.originAirport.airport_name);
-    $('#flights').append('<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + '원)</small>');
+    $('#flights').html('예약하기<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + '원)</small>');
 
     if (deal.photo.citation) {
       $("#deal a.photo-credits").css("display", "block").attr("href", deal.photo.external_link);
