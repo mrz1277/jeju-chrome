@@ -152,15 +152,15 @@ var WT = {
     $('a.btn-tickets').html('예약하기<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + '원)</small>')
       .attr('href', 'http://air.jejudo.com');
 
-    if (deal.photo.citation) {
+    if (deal.photo.author && deal.photo.source && deal.photo.external_link) {
       $("#deal a.photo-credits").css("display", "block").attr("href", deal.photo.external_link);
-      $("#deal a.photo-credits span").text(deal.photo.citation);
+      $("#deal a.photo-credits span").text(deal.photo.author + '(' + deal.photo.source + ')');
     } else {
       $("#deal a.photo-credits").css("display", "none");
     }
 
-    if (deal.photo.location) {
-      $("#deal a.photo-location span").text(deal.photo.location);
+    if (deal.photo.name) {
+      $("#deal a.photo-location span").text(deal.photo.name);
       if (deal.photo.latitude && deal.photo.longitude) {
         var url = 'http://map.naver.com/?menu=location&mapMode=0&lat=' +
           deal.photo.latitude + '&lng=' + deal.photo.longitude + '&dlevel=11&enc=b64';
