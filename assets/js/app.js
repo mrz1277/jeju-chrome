@@ -158,7 +158,7 @@ var WT = {
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
     WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, WT.originAirport.airport_name, chrome.i18n.getMessage("jeju"));
     WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, chrome.i18n.getMessage("jeju"), WT.originAirport.airport_name);
-    $('a.btn-tickets').html(chrome.i18n.getMessage("book") + '<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + chrome.i18n.getMessage("won") + ')</small>')
+    $('a.btn-tickets').html(chrome.i18n.getMessage("book") + '<small> (' + $.number(deal.suggestion.depart_price + deal.suggestion.return_price) + chrome.i18n.getMessage("won") + ')</small>')
       .attr('href', 'http://air.jejudo.com?' +
       'depCity=' + WT.originAirport.iata_code +
       '&depDate=' + deal.suggestion.depart_date +
@@ -221,7 +221,7 @@ var WT = {
   },
   setContent: function(flight, date, price, dep_airport, arr_airport) {
     $('.'+flight+'-date').text(date ? moment(date).format('D' + chrome.i18n.getMessage('day') + ' HH:mm'): '');
-    $('.'+flight+'-price').text(price ? price + chrome.i18n.getMessage('day') : '');
+    $('.'+flight+'-price').text(price ? $.number(price) + chrome.i18n.getMessage('won') : '');
     $('.'+flight+'-airport').html(dep_airport && arr_airport ? dep_airport + ' <i class="fa fa-long-arrow-right"></i> ' + arr_airport : '');
 
   }
@@ -230,8 +230,8 @@ var WT = {
 document.title = chrome.i18n.getMessage('appName');
 
 $(document).ready(function() {
-  $('#depart').text(chrome.i18n.getMessage('depart'));
-  $('#return').text(chrome.i18n.getMessage('return'));
+  $('#depart').text(chrome.i18n.getMessage('departFlight'));
+  $('#return').text(chrome.i18n.getMessage('returnFlight'));
   $('.r1').text(chrome.i18n.getMessage('r1'));
   $('.r2').text(chrome.i18n.getMessage('r2'));
   $('.r3').text(chrome.i18n.getMessage('r3'));
@@ -333,8 +333,8 @@ $(document).ready(function() {
             WT.highlightCalendar(_clickedDate, date); // highlight from depart to return date
             WT.setContent('return', dateFormat, value, chrome.i18n.getMessage('jeju'), WT.originAirport.airport_name); // set return table contents
 
-            var priceTotal = parseInt($('.depart-price').text()) + parseInt(value);
-            $('a.btn-tickets').html(chrome.i18n.getMessage('book')+'<small> (' + priceTotal + chrome.i18n.getMessage('won') + ')</small>')
+            var priceTotal = parseInt($('.depart-price').text().replace(',', '')) + parseInt(value);
+            $('a.btn-tickets').html(chrome.i18n.getMessage('book')+'<small> (' + $.number(priceTotal) + chrome.i18n.getMessage('won') + ')</small>')
               .addClass('available')
               .attr('href', 'http://air.jejudo.com?' +
               'depCity=' + $('a.btn-tickets').data('depCity') +

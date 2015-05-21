@@ -27,9 +27,12 @@
     "message": "일정 없음"
   },
   "depart": {
+    "message": "출발"
+  },
+  "departFlight": {
     "message": "출발편"
   },
-  "return": {
+  "returnFlight": {
     "message": "도착편"
   },
   "selectDepartDate": {
