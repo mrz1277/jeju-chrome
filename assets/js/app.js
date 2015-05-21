@@ -66,7 +66,7 @@ var WT = {
     if (WT.originAirport) {
       return deferred.resolve(WT.originAirport);
     } else {
-      WT.showLoader("Determining the closest airport to you");
+      WT.showLoader(chrome.i18n.getMessage('searchAirport'));
       $.when(WT.getMyLocation().pipe(WT.getClosestAirport, WT.getClosestAirport)).then(function(airport) {
         WT.originAirport = airport;
         localStorage.setItem("originAirport", JSON.stringify(airport));
@@ -156,9 +156,9 @@ var WT = {
   displayDeal: function(deal) {
     $("#deal").removeClass("visible");
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
-    WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, WT.originAirport.airport_name, '제주');
-    WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, '제주', WT.originAirport.airport_name);
-    $('a.btn-tickets').html('예약하기<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + '원)</small>')
+    WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, WT.originAirport.airport_name, chrome.i18n.getMessage("jeju"));
+    WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, chrome.i18n.getMessage("jeju"), WT.originAirport.airport_name);
+    $('a.btn-tickets').html(chrome.i18n.getMessage("book") + '<small> (' + (deal.suggestion.depart_price + deal.suggestion.return_price) + chrome.i18n.getMessage("won") + ')</small>')
       .attr('href', 'http://air.jejudo.com?' +
       'depCity=' + WT.originAirport.iata_code +
       '&depDate=' + deal.suggestion.depart_date +
@@ -220,14 +220,22 @@ var WT = {
     _cal.highlight(dates);
   },
   setContent: function(flight, date, price, dep_airport, arr_airport) {
-    $('.'+flight+'-date').text(date ? moment(date).format('D일 HH:mm'): '');
-    $('.'+flight+'-price').text(price ? price + '원' : '');
+    $('.'+flight+'-date').text(date ? moment(date).format('D' + chrome.i18n.getMessage('day') + ' HH:mm'): '');
+    $('.'+flight+'-price').text(price ? price + chrome.i18n.getMessage('day') : '');
     $('.'+flight+'-airport').html(dep_airport && arr_airport ? dep_airport + ' <i class="fa fa-long-arrow-right"></i> ' + arr_airport : '');
 
   }
 };
 
+document.title = chrome.i18n.getMessage('appName');
+
 $(document).ready(function() {
+  $('#depart').text(chrome.i18n.getMessage('depart'));
+  $('#return').text(chrome.i18n.getMessage('return'));
+  $('.r1').text(chrome.i18n.getMessage('r1'));
+  $('.r2').text(chrome.i18n.getMessage('r2'));
+  $('.r3').text(chrome.i18n.getMessage('r3'));
+
   WT.init(function() {
     _cal.init({
       itemSelector: "#cal-heatmap",
@@ -245,7 +253,7 @@ $(document).ready(function() {
       weekStartOnMonday: false,
       domainDynamicDimension: false,
       domainLabelFormat: function(date) {
-        return moment(date).format("MMMM").toUpperCase();
+        return moment(date).format("M") + chrome.i18n.getMessage('month');
       },
       subDomainTextFormat: "%e",
       subDomainDateFormat: function(date) {
@@ -255,8 +263,8 @@ $(document).ready(function() {
         return moment(data[moment(date).format('X')]).format('HH:mm');
       },
       subDomainTitleFormat: {
-        empty: "일정 없음",
-        filled: "{count}원 {date} 출발"
+        empty: chrome.i18n.getMessage('noSchedule'),
+        filled: "{count}" + chrome.i18n.getMessage('won') + " {date} " + chrome.i18n.getMessage('depart')
       },
       displayLegend: false,
       legendVerticalPosition: "top",
@@ -313,7 +321,7 @@ $(document).ready(function() {
             WT.setContent('depart'); // depart table contents set to null
             WT.setContent('return'); // return table contents set to null
 
-            $('a.btn-tickets').html('<small>출발일선택</small>')
+            $('a.btn-tickets').html('<small>'+ chrome.i18n.getMessage('selectDepartDate') +'</small>')
               .removeClass('available')
               .attr('href', '')
               .removeData('depCity')
@@ -323,10 +331,10 @@ $(document).ready(function() {
           // 도착일 선택됨
           else {
             WT.highlightCalendar(_clickedDate, date); // highlight from depart to return date
-            WT.setContent('return', dateFormat, value, '제주', WT.originAirport.airport_name); // set return table contents
+            WT.setContent('return', dateFormat, value, chrome.i18n.getMessage('jeju'), WT.originAirport.airport_name); // set return table contents
 
             var priceTotal = parseInt($('.depart-price').text()) + parseInt(value);
-            $('a.btn-tickets').html('예약하기<small> (' + priceTotal + '원)</small>')
+            $('a.btn-tickets').html(chrome.i18n.getMessage('book')+'<small> (' + priceTotal + chrome.i18n.getMessage('won') + ')</small>')
               .addClass('available')
               .attr('href', 'http://air.jejudo.com?' +
               'depCity=' + $('a.btn-tickets').data('depCity') +
@@ -344,9 +352,9 @@ $(document).ready(function() {
           _clickedDate = date;
           _cal.highlight(date);
           _cal.update(JSON.parse(localStorage.getItem("returnPrice")), false);
-          WT.setContent('depart', dateFormat, value, WT.originAirport.airport_name, '제주');
+          WT.setContent('depart', dateFormat, value, WT.originAirport.airport_name, chrome.i18n.getMessage('jeju'));
           WT.setContent('return');
-          $('a.btn-tickets').html('<small>도착일선택</small>')
+          $('a.btn-tickets').html('<small>' + chrome.i18n.getMessage('selectReturnDate') + '</small>')
             .removeClass('available')
             .attr('href', '')
             .data('depCarrier', carrier)
@@ -361,8 +369,9 @@ $(document).ready(function() {
     $(this).attr('href') === '' && e.preventDefault();
   });
 
-  $(".tooltip").tooltipster({
+  $("#refreshLocation").tooltipster({
     position: "left",
-    delay: 0
+    delay: 0,
+    content: chrome.i18n.getMessage('refreshLocation')
   });
 });

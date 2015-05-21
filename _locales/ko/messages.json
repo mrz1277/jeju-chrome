@@ -1,0 +1,56 @@
+{
+  "appDescription": {
+    "message": "제주 최저가 항공"
+  },
+  "appName": {
+    "message": "ㅈㅈ"
+  },
+  "title": {
+    "message": "ㅈㅈ"
+  },
+  "book": {
+    "message": "예약하기"
+  },
+  "jeju": {
+    "message": "제주"
+  },
+  "won": {
+    "message": "원"
+  },
+  "month": {
+    "message": "월"
+  },
+  "day": {
+    "message": "일"
+  },
+  "noSchedule": {
+    "message": "일정 없음"
+  },
+  "depart": {
+    "message": "출발편"
+  },
+  "return": {
+    "message": "도착편"
+  },
+  "selectDepartDate": {
+    "message": "출발일선택"
+  },
+  "selectReturnDate": {
+    "message": "도착일선택"
+  },
+  "refreshLocation": {
+    "message": "내 위치 갱신"
+  },
+  "r1": {
+    "message": "~ 4만원"
+  },
+  "r2": {
+    "message": "~ 6만원"
+  },
+  "r3": {
+    "message": "~ 8만원"
+  },
+  "searchAirport": {
+    "message": "가까운 공항을 검색중입니다."
+  }
+}
