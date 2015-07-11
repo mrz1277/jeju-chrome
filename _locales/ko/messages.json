@@ -55,5 +55,8 @@
   },
   "searchAirport": {
     "message": "가까운 공항을 검색중입니다."
+  },
+  "info": {
+    "message": "정보"
   }
 }
