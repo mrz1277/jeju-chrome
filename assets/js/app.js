@@ -1,5 +1,5 @@
-var _gaq = [];
-_gaq.push(['_setAccount', 'UA-62234040-1']);
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-62234040-2']);
 
 (function() {
   var ga = document.createElement('script');
@@ -18,10 +18,6 @@ moment.locale("ko");
 
 var WT = {
   init: function(done) {
-    WT.version = "1.1.5";
-    WT.utm_params = "?utm_source=wandertab";
-    WT.utm_params += "&utm_campaign=wandertab_" + WT.version;
-    WT.utm_params += "&utm_medium=chrome_ext";
     WT.simulateLoading = true;
     WT.initializing = true;
     WT.newDeals = JSON.parse(localStorage.getItem("newDeals"));
@@ -163,8 +159,8 @@ var WT = {
       'depCity=' + WT.originAirport.iata_code +
       '&depDate=' + deal.suggestion.depart_date +
       '&retDate=' + deal.suggestion.return_date +
-      '&depCarrier=' + deal.suggestion.depart_carrier +
-      '&retCarrier=' + deal.suggestion.return_carrier
+      '&depFlight=' + deal.suggestion.depart_flight + deal.suggestion.depart_class +
+      '&retFlight=' + deal.suggestion.return_flight + deal.suggestion.return_class
     );
 
     if (deal.photo.author && deal.photo.source && deal.photo.external_link) {
@@ -276,15 +272,15 @@ $(document).ready(function() {
       legend: [40000, 60000, 80000],
       afterLoadData: function(data) {
         //price는 해당일의 값(count)을 의미하고, date는 시간정보까지 담기 위해 따로 저장(서브도메인이 날짜라 시간정보가 안담김)
-        var departPrice = {}, departDate = {}, departCarrier = {};
-        var returnPrice = {}, returnDate = {}, returnCarrier = {};
+        var departPrice = {}, departDate = {}, departFlight = {};
+        var returnPrice = {}, returnDate = {}, returnFlight = {};
 
         data.depart.forEach(function(d) {
           departPrice[d.date] = d.price;
 
           var dateKey = moment(d.date, 'X').startOf('day').format('X');
           departDate[dateKey] = moment(d.date, 'X').toDate();
-          departCarrier[dateKey] = d.carrier;
+          departFlight[dateKey] = d.flight;
         });
 
         data.return.forEach(function(d) {
@@ -292,27 +288,27 @@ $(document).ready(function() {
 
           var dateKey = moment(d.date, 'X').startOf('day').format('X');
           returnDate[dateKey] = moment(d.date, 'X').toDate();
-          returnCarrier[dateKey] = d.carrier;
+          returnFlight[dateKey] = d.flight;
         });
 
         localStorage.setItem("departPrice", JSON.stringify(departPrice));
         localStorage.setItem("returnPrice", JSON.stringify(returnPrice));
         localStorage.setItem("departDate", JSON.stringify(departDate));
         localStorage.setItem("returnDate", JSON.stringify(returnDate));
-        localStorage.setItem("departCarrier", JSON.stringify(departCarrier));
-        localStorage.setItem("returnCarrier", JSON.stringify(returnCarrier));
+        localStorage.setItem("departFlight", JSON.stringify(departFlight));
+        localStorage.setItem("returnFlight", JSON.stringify(returnFlight));
 
         return departPrice;
       },
       onClick: function(date, value) {
-        var carrierData = _clickedDate ? JSON.parse(localStorage.getItem("returnCarrier"))
-          : JSON.parse(localStorage.getItem("departCarrier"));
+        var flightData = _clickedDate ? JSON.parse(localStorage.getItem("returnFlight"))
+          : JSON.parse(localStorage.getItem("departFlight"));
         var dateData = _clickedDate ? JSON.parse(localStorage.getItem("returnDate"))
           : JSON.parse(localStorage.getItem("departDate"));
 
         var key = moment(date).format('X');
         var dateFormat = moment(dateData[key]);
-        var carrier = carrierData[key];
+        var flight = flightData[key];
 
         if (_clickedDate) {
           // 초기화
@@ -325,7 +321,7 @@ $(document).ready(function() {
               .removeClass('available')
               .attr('href', '')
               .removeData('depCity')
-              .removeData('depCarrier')
+              .removeData('depFlight')
               .removeData('depDate');
           }
           // 도착일 선택됨
@@ -340,8 +336,8 @@ $(document).ready(function() {
               'depCity=' + $('a.btn-tickets').data('depCity') +
               '&depDate=' + $('a.btn-tickets').data('depDate') +
               '&retDate=' + dateFormat.format('YYYY-MM-DDTHH:mm') +
-              '&depCarrier=' + $('a.btn-tickets').data('depCarrier') +
-              '&retCarrier=' + carrier);
+              '&depFlight=' + $('a.btn-tickets').data('depFlight') +
+              '&retFlight=' + flight);
           }
           _clickedDate = undefined;
 
@@ -357,7 +353,7 @@ $(document).ready(function() {
           $('a.btn-tickets').html('<small>' + chrome.i18n.getMessage('selectReturnDate') + '</small>')
             .removeClass('available')
             .attr('href', '')
-            .data('depCarrier', carrier)
+            .data('depFlight', flight)
             .data('depCity', WT.originAirport.iata_code)
             .data('depDate', dateFormat.format('YYYY-MM-DDTHH:mm'));
         }
@@ -373,5 +369,11 @@ $(document).ready(function() {
     position: "left",
     delay: 0,
     content: chrome.i18n.getMessage('refreshLocation')
+  });
+
+  $("#info").tooltipster({
+    position: "left",
+    delay: 0,
+    content: chrome.i18n.getMessage('info')
   });
 });
