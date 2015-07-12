@@ -1,3 +1,8 @@
+/*  ==============================================================
+ Util
+ =============================================================== */
+
+// Parse query parameters
 var query = (function queryStringToJSON() {
   var pairs = location.search.slice(1).split('&');
 
@@ -19,12 +24,14 @@ var query = (function queryStringToJSON() {
   return json;
 })();
 
+// Get url path
 var pathName = (function() {
   var l = document.createElement("a");
   l.href = location.href;
   return l.pathname;
 })();
 
+// from http://air.jejudo.com/
 function GetSeatClass(carrierCode, bookingclass) {
   var strClass = "";
   switch (bookingclass) {
@@ -50,7 +57,10 @@ function GetSeatClass(carrierCode, bookingclass) {
   return strClass;
 }
 
-//
+
+/*  ==============================================================
+ Content Script
+ =============================================================== */
 
 if (pathName === '/' && !$.isEmptyObject(query)) {
   $('#sel_depcity').val(query.depCity);
@@ -115,5 +125,5 @@ if (pathName === '/' && !$.isEmptyObject(query)) {
   });
 }
 else if (pathName === '/RealAir/Create') {
-
+  // TODO 저장된 값으로 입력 폼 자동완성
 }
