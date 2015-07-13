@@ -45,10 +45,7 @@ var WT = {
       done();
     });
 
-    $("a").on("click", function(a) {
-      _gaq.push(["_trackEvent", a.target.id, "clicked"]);
-    });
-    _gaq.push(["_trackEvent", "newTab", "opened"]);
+    _gaq.push(["_trackEvent", "newTab", "opened", WT.originAirport.iata_code]);
     _gaq.push(["_trackPageview"]);
   },
   getOriginAirport: function() {
@@ -150,17 +147,25 @@ var WT = {
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
     WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, chrome.i18n.getMessage(WT.originAirport.iata_code), chrome.i18n.getMessage("CJU"));
     WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, chrome.i18n.getMessage("CJU"), chrome.i18n.getMessage(WT.originAirport.iata_code));
-    $('a.btn-tickets').html(chrome.i18n.getMessage("book") + '<small> (' + $.number(deal.suggestion.depart_price + deal.suggestion.return_price) + chrome.i18n.getMessage("won") + ')</small>')
+    $('a.btn-tickets')
+      .html(chrome.i18n.getMessage("book") + '<small> (' + $.number(deal.suggestion.depart_price + deal.suggestion.return_price) + chrome.i18n.getMessage("won") + ')</small>')
       .attr('href', 'http://air.jejudo.com?' +
       'depCity=' + WT.originAirport.iata_code +
       '&depDate=' + deal.suggestion.depart_date +
       '&retDate=' + deal.suggestion.return_date +
       '&depFlight=' + deal.suggestion.depart_flight + deal.suggestion.depart_class +
       '&retFlight=' + deal.suggestion.return_flight + deal.suggestion.return_class
-    );
+    ).on('click', function() {
+        _gaq.push(['_trackEvent', 'book', 'clicked', 'air.jejudo.com', deal.suggestion.depart_price + deal.suggestion.return_price]);
+      });
 
     if (deal.photo.author && deal.photo.source && deal.photo.external_link) {
-      $("#deal a.photo-credits").css("display", "block").attr("href", deal.photo.external_link);
+      $("#deal a.photo-credits")
+        .css("display", "block")
+        .attr("href", deal.photo.external_link)
+        .on('click', function() {
+          _gaq.push(['_trackEvent', 'credits', 'clicked', deal.photo.external_link]);
+        });
       $("#deal a.photo-credits span").text(deal.photo.author + '(' + deal.photo.source + ')');
     } else {
       $("#deal a.photo-credits").css("display", "none");
@@ -171,7 +176,12 @@ var WT = {
       if (deal.photo.latitude && deal.photo.longitude) {
         var url = 'http://map.naver.com/?menu=location&mapMode=0&lat=' +
           deal.photo.latitude + '&lng=' + deal.photo.longitude + '&dlevel=11&enc=b64';
-        $("#deal a.photo-location").css("display", "block").attr("href", url);
+        $("#deal a.photo-location")
+          .css("display", "block")
+          .attr("href", url)
+          .on('click', function() {
+            _gaq.push(['_trackEvent', 'location', 'clicked', deal.photo.external_link]);
+          });
       } else {
         $("#deal a.photo-location").css("border", "none").css("cursor", "none");
       }
@@ -380,7 +390,10 @@ $(document).ready(function() {
               '&depDate=' + $('a.btn-tickets').data('depDate') +
               '&retDate=' + dateFormat.format('YYYY-MM-DDTHH:mm') +
               '&depFlight=' + $('a.btn-tickets').data('depFlight') +
-              '&retFlight=' + flight);
+              '&retFlight=' + flight)
+              .on('click', function() {
+                _gaq.push(['_trackEvent', 'book', 'clicked', 'air.jejudo.com', priceTotal]);
+              });
 
             if (tutorial.tripIndex === 3) {
               tutorial.next();
@@ -419,6 +432,7 @@ $(document).ready(function() {
   $('.btn-settings-confirm').on('click', function() {
     WT.originAirport = { "iata_code": $('#selectAirport').val() };
     localStorage.setItem("originAirport", JSON.stringify(WT.originAirport));
+    _gaq.push(['_trackEvent', 'settings', 'changeAirport', $('#selectAirport').val()]);
     WT.nextDeal();
     $.modal.close();
   });
@@ -429,7 +443,10 @@ $(document).ready(function() {
       position: "bottom",
       delay: 0,
       content: chrome.i18n.getMessage($(this).attr('id'))
-    })
+    });
+    $(this).on('click', function() {
+      _gaq.push(["_trackEvent", $(this).attr('id'), "clicked"]);
+    });
   });
 
   // i18n

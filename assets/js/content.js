@@ -1,4 +1,20 @@
 /*  ==============================================================
+ GA
+ =============================================================== */
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-62234040-2']);
+
+(function() {
+  var ga = document.createElement('script');
+  ga.type = 'text/javascript';
+  ga.async = true;
+  ga.src = ('https:' == document.location.protocol || 'chrome-extension:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+_gaq.push(["_trackPageview"]);
+
+/*  ==============================================================
  Util
  =============================================================== */
 
@@ -73,7 +89,9 @@ if (pathName === '/' && !$.isEmptyObject(query)) {
     }
   });
 
-  $('#searchAirList').click();
+  $('#searchAirList').click().on('click', function() {
+    _gaq.push(['_trackEvent', 'book', 'search', 'air.jejudo.com']);
+  });
 
   $('#realTimeLeftList').bind('DOMSubtreeModified', function() {
     // 지정된 항공편 이외에 최저가가 있는지 체크
@@ -123,7 +141,17 @@ if (pathName === '/' && !$.isEmptyObject(query)) {
       }
     });
   });
+
+  // event tracking
+  $('.jd_reservation').on("click", function() {
+    _gaq.push(['_trackEvent', 'book', 'create', 'air.jejudo.com']);
+  });
 }
 else if (pathName === '/RealAir/Create') {
-  // TODO 저장된 값으로 입력 폼 자동완성
+  $('#btnReservationCommit').on('click', function() {
+    _gaq.push(['_trackEvent', 'book', 'complete', 'air.jejudo.com']);
+  });
+}
+else if (pathName === '/RealAir/Completed') {
+
 }
