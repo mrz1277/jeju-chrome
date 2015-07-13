@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
 <html lang="ko">
 <head>
-  <title></title>
+  <title data-message="appName"></title>
 
   <link href="assets/lib/loaders.css/loaders.min.css" rel="stylesheet">
   <link href="assets/lib/cal-heatmap/cal-heatmap.css" rel="stylesheet">
   <link href="assets/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="assets/lib/jquery-modal/jquery.modal.css" rel="stylesheet">
   <link href="assets/css/tooltipster.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
 
@@ -15,7 +16,8 @@
   <script src="assets/lib/watch/src/watch.min.js"></script>
   <script src="assets/lib/d3/d3.min.js"></script>
   <script src="assets/lib/cal-heatmap/cal-heatmap.min.js"></script>
-  <script src="assets/js/jquery.number.min.js"></script>
+  <script src="assets/lib/jquery-number/jquery.number.min.js"></script>
+  <script src="assets/lib/jquery-modal/jquery.modal.min.js"></script>
   <script src="assets/js/app.js"></script>
 
 </head>
@@ -23,30 +25,30 @@
 <header>
   <div class="container">
     <div class="col-right">
-      <a title="내 위치 갱신" class="btn btn-tooltip tooltip" id="refreshLocation">
+      <a class="btn btn-tooltip tooltip" id="refreshLocation">
         <i class="fa fa-location-arrow"></i>
       </a>
-      <!--<a title="정보" class="btn btn-tooltip tooltip" id="info">-->
-        <!--<i class="fa fa-info"></i>-->
-      <!--</a>-->
-      <!--<a title="설정" class="btn btn-tooltip tooltip" id="changeAirport">-->
-        <!--<i class="fa fa-cog"></i>-->
-      <!--</a>-->
+      <a class="btn btn-tooltip tooltip" id="settings" href="#modal-settings" rel="modal:open">
+        <i class="fa fa-cog"></i>
+      </a>
+      <a class="btn btn-tooltip tooltip" id="tutorial">
+        <i class="fa fa-question"></i>
+      </a>
     </div>
   </div>
 </header>
 <section id="deal" class="deal">
   <div class="cal-legend">
-    <span class="r1">~ 4만원</span>
-    <span class="r2">~ 6만원</span>
-    <span class="r3">~ 8만원</span>
+    <span class="r1" data-message="r1"></span>
+    <span class="r2" data-message="r2"></span>
+    <span class="r3" data-message="r3"></span>
   </div>
   <div id="cal-heatmap"></div>
   <table>
     <tr>
       <td></td>
-      <td id="depart">출발</td>
-      <td id="return">도착</td>
+      <td data-message="departFlight"></td>
+      <td data-message="returnFlight"></td>
       <td></td>
     </tr>
     <tr>
@@ -68,7 +70,7 @@
       <td></td>
     </tr>
   </table>
-  <span class="btn-wraper"><a href="" class="btn-tickets available" target="_blank">예약하기</a></span>
+  <span class="btn-wraper"><a href="" class="btn-tickets available" target="_blank"></a></span>
   <a class="photo-credits" target="_blank"><i class="fa fa-camera"></i><span class="credits-text"></span></a>
   <a class="photo-location" target="_blank"><i class="fa fa-map-marker"></i><span class="location-text"></span></a>
 </section>
@@ -79,7 +81,31 @@
     <div class="loader-inner ball-clip-rotate">
       <div></div>
     </div>
-    <span class="title">가까운 공항을 검색중입니다.</span>
+    <span class="title" data-message="searchAirport"></span>
+  </div>
+</div>
+<div class="modal" id="modal-settings" style="display:none;">
+  <h3 data-message="settings"></h3>
+  <div class="form-group">
+    <label for="selectAirport" data-message="changeAirport"></label>
+    <select id="selectAirport">
+      <option value="KWJ"></option>
+      <option value="KUV"></option>
+      <option value="GMP"></option>
+      <option value="TAE"></option>
+      <option value="MWX"></option>
+      <option value="PUS"></option>
+      <option value="HIN"></option>
+      <option value="RSU"></option>
+      <option value="USN"></option>
+      <option value="WJU"></option>
+      <option value="CJJ"></option>
+      <option value="KPO"></option>
+    </select>
+  </div>
+  <div class="button-group">
+    <button type="button" data-message="confirm" class="btn-settings-confirm"></button>
+    <a href="#close" rel="modal:close"><button type="button" data-message="cancel"></button></a>
   </div>
 </div>
 </body>

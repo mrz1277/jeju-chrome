@@ -8,9 +8,6 @@
   "book": {
     "message": "예약하기"
   },
-  "jeju": {
-    "message": "제주"
-  },
   "won": {
     "message": "원"
   },
@@ -53,7 +50,58 @@
   "searchAirport": {
     "message": "가까운 공항을 검색중입니다."
   },
-  "info": {
-    "message": "정보"
+  "tutorial": {
+    "message": "도움말"
+  },
+  "settings": {
+    "message": "설정"
+  },
+  "changeAirport": {
+    "message": "공항 변경"
+  },
+  "confirm": {
+    "message": "확인"
+  },
+  "cancel": {
+    "message": "취소"
+  },
+  "KWJ": {
+    "message": "광주"
+  },
+  "KUV": {
+    "message": "군산"
+  },
+  "GMP": {
+    "message": "김포"
+  },
+  "TAE": {
+    "message": "대구"
+  },
+  "MWX": {
+    "message": "무안"
+  },
+  "PUS": {
+    "message": "부산"
+  },
+  "RSU": {
+    "message": "여수"
+  },
+  "USN": {
+    "message": "울산"
+  },
+  "WJU": {
+    "message": "원주"
+  },
+  "HIN": {
+    "message": "사천"
+  },
+  "CJU": {
+    "message": "제주"
+  },
+  "CJJ": {
+    "message": "청주"
+  },
+  "KPO": {
+    "message": "포항"
   }
 }

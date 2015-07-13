@@ -398,3 +398,27 @@ td:first-child, td:last-child {
 tr:first-child {
     font-size: 14px;
 }
+
+/* jquery.modal */
+
+.modal {
+    top: 30% !important;
+}
+
+.modal .button-group {
+    float: right;
+    margin-top: 20px;
+}
+
+.modal a.close-modal {
+    display: none;
+}
+
+.modal h3 {
+    margin-top: 10px;
+}
+
+.modal label {
+    font-size: 14px;
+    margin-right: 20px;
+}

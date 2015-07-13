@@ -42,13 +42,9 @@ var WT = {
       $("#refreshLocation").on("click", function() {
         WT.refreshOriginAirport().done(WT.nextDeal);
       });
-      $(".btn-shuffle").on("click", function() {
-        WT.nextDeal();
-      });
       done();
     });
 
-    $("#HitlistLogo").attr("href", "http://www.hitlistapp.com/flights/" + WT.utm_params);
     $("a").on("click", function(a) {
       _gaq.push(["_trackEvent", a.target.id, "clicked"]);
     });
@@ -62,7 +58,7 @@ var WT = {
     if (WT.originAirport) {
       return deferred.resolve(WT.originAirport);
     } else {
-      WT.showLoader(chrome.i18n.getMessage('searchAirport'));
+      WT.showLoader();
       $.when(WT.getMyLocation().pipe(WT.getClosestAirport, WT.getClosestAirport)).then(function(airport) {
         WT.originAirport = airport;
         localStorage.setItem("originAirport", JSON.stringify(airport));
@@ -152,8 +148,8 @@ var WT = {
   displayDeal: function(deal) {
     $("#deal").removeClass("visible");
     $("#bg").css("background-image", "url(" + deal.photo.url + ")");
-    WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, WT.originAirport.airport_name, chrome.i18n.getMessage("jeju"));
-    WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, chrome.i18n.getMessage("jeju"), WT.originAirport.airport_name);
+    WT.setContent('depart', deal.suggestion.depart_date, deal.suggestion.depart_price, chrome.i18n.getMessage(WT.originAirport.iata_code), chrome.i18n.getMessage("CJU"));
+    WT.setContent('return', deal.suggestion.return_date, deal.suggestion.return_price, chrome.i18n.getMessage("CJU"), chrome.i18n.getMessage(WT.originAirport.iata_code));
     $('a.btn-tickets').html(chrome.i18n.getMessage("book") + '<small> (' + $.number(deal.suggestion.depart_price + deal.suggestion.return_price) + chrome.i18n.getMessage("won") + ')</small>')
       .attr('href', 'http://air.jejudo.com?' +
       'depCity=' + WT.originAirport.iata_code +
@@ -223,15 +219,8 @@ var WT = {
   }
 };
 
-document.title = chrome.i18n.getMessage('appName');
 
 $(document).ready(function() {
-  $('#depart').text(chrome.i18n.getMessage('departFlight'));
-  $('#return').text(chrome.i18n.getMessage('returnFlight'));
-  $('.r1').text(chrome.i18n.getMessage('r1'));
-  $('.r2').text(chrome.i18n.getMessage('r2'));
-  $('.r3').text(chrome.i18n.getMessage('r3'));
-
   WT.init(function() {
     _cal.init({
       itemSelector: "#cal-heatmap",
@@ -327,7 +316,7 @@ $(document).ready(function() {
           // 도착일 선택됨
           else {
             WT.highlightCalendar(_clickedDate, date); // highlight from depart to return date
-            WT.setContent('return', dateFormat, value, chrome.i18n.getMessage('jeju'), WT.originAirport.airport_name); // set return table contents
+            WT.setContent('return', dateFormat, value, chrome.i18n.getMessage("CJU"), chrome.i18n.getMessage(WT.originAirport.iata_code)); // set return table contents
 
             var priceTotal = parseInt($('.depart-price').text().replace(',', '')) + parseInt(value);
             $('a.btn-tickets').html(chrome.i18n.getMessage('book')+'<small> (' + $.number(priceTotal) + chrome.i18n.getMessage('won') + ')</small>')
@@ -348,7 +337,7 @@ $(document).ready(function() {
           _clickedDate = date;
           _cal.highlight(date);
           _cal.update(JSON.parse(localStorage.getItem("returnPrice")), false);
-          WT.setContent('depart', dateFormat, value, WT.originAirport.airport_name, chrome.i18n.getMessage('jeju'));
+          WT.setContent('depart', dateFormat, value, chrome.i18n.getMessage(WT.originAirport.iata_code), chrome.i18n.getMessage("CJU"));
           WT.setContent('return');
           $('a.btn-tickets').html('<small>' + chrome.i18n.getMessage('selectReturnDate') + '</small>')
             .removeClass('available')
@@ -365,15 +354,41 @@ $(document).ready(function() {
     $(this).attr('href') === '' && e.preventDefault();
   });
 
-  $("#refreshLocation").tooltipster({
-    position: "left",
-    delay: 0,
-    content: chrome.i18n.getMessage('refreshLocation')
+  $('.btn-settings-confirm').on('click', function() {
+    WT.originAirport = { "iata_code": $('#selectAirport').val() };
+    localStorage.setItem("originAirport", JSON.stringify(WT.originAirport));
+    WT.nextDeal();
+    $.modal.close();
   });
 
-  $("#info").tooltipster({
-    position: "left",
-    delay: 0,
-    content: chrome.i18n.getMessage('info')
+  // tooltips
+  $(".tooltip").each(function() {
+    $(this).tooltipster({
+      position: "bottom",
+      delay: 0,
+      content: chrome.i18n.getMessage($(this).attr('id'))
+    })
+  });
+
+  $('#tutorial').on('click', function() {
+
+  });
+
+  // i18n
+  // find elements has data-message attribute, replace content to i18n
+  var objects = document.getElementsByTagName('*'), i;
+  for(i = 0; i < objects.length; i++) {
+    if (objects[i].dataset && objects[i].dataset.message) {
+      objects[i].innerHTML = chrome.i18n.getMessage(objects[i].dataset.message);
+    }
+  }
+
+  $('option').each(function() {
+    var airport = $(this).attr('value');
+    if (WT.originAirport.iata_code === airport) {
+      $(this).attr('selected', 'selected');
+    }
+    $(this).text(chrome.i18n.getMessage(airport));
   });
 });
+

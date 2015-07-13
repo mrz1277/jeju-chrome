@@ -12,6 +12,8 @@
     "watch": "*",
     "loaders.css": "~0.1.1",
     "cal-heatmap": "~3.5.2",
-    "font-awesome": "~4.3.0"
+    "font-awesome": "~4.3.0",
+    "jquery-modal": "~0.5.2",
+    "jquery-number": "~2.1.5"
   }
 }
