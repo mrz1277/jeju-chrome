@@ -219,6 +219,56 @@ var WT = {
   }
 };
 
+var tutorial = new Trip([
+  {
+    sel: 'table',
+    content: chrome.i18n.getMessage('tutorialRecommend'),
+    position: 'e',
+    showNavigation : true
+  },
+  {
+    sel: '.cal-legend',
+    content: chrome.i18n.getMessage('tutorialLegend'),
+    position: 'n',
+    showNavigation : true
+  },
+  {
+    sel: '#cal-heatmap',
+    content: chrome.i18n.getMessage('tutorialDepart'),
+    position: 'w',
+    showNavigation: false
+  },
+  {
+    sel: '#cal-heatmap',
+    content: chrome.i18n.getMessage('tutorialReturn'),
+    position: 'w',
+    showNavigation: false
+  },
+  {
+    sel: 'table',
+    content: chrome.i18n.getMessage('tutorialCheck'),
+    position: 'e',
+    showNavigation : true
+  },
+  {
+    sel: 'a.btn-tickets',
+    content: chrome.i18n.getMessage('tutorialBook'),
+    position: 'e',
+    showNavigation : true
+  }
+], {
+  delay: -1,
+  enableAnimation: false,
+  showCloseBox : true,
+  prevLabel: chrome.i18n.getMessage('prev'),
+  nextLabel: chrome.i18n.getMessage('next'),
+  finishLabel: chrome.i18n.getMessage('finish'),
+  onTripClose: function(i) {
+    localStorage.setItem('tutorial', 'step-'+i);
+    _gaq.push(["_trackEvent", "tutorial", "step-" + i]);
+  }
+});
+
 
 $(document).ready(function() {
   WT.init(function() {
@@ -327,6 +377,10 @@ $(document).ready(function() {
               '&retDate=' + dateFormat.format('YYYY-MM-DDTHH:mm') +
               '&depFlight=' + $('a.btn-tickets').data('depFlight') +
               '&retFlight=' + flight);
+
+            if (tutorial.tripIndex === 3) {
+              tutorial.next();
+            }
           }
           _clickedDate = undefined;
 
@@ -345,6 +399,10 @@ $(document).ready(function() {
             .data('depFlight', flight)
             .data('depCity', WT.originAirport.iata_code)
             .data('depDate', dateFormat.format('YYYY-MM-DDTHH:mm'));
+
+          if (tutorial.tripIndex === 2) {
+            tutorial.next();
+          }
         }
       }
     });
@@ -370,10 +428,6 @@ $(document).ready(function() {
     })
   });
 
-  $('#tutorial').on('click', function() {
-
-  });
-
   // i18n
   // find elements has data-message attribute, replace content to i18n
   var objects = document.getElementsByTagName('*'), i;
@@ -390,5 +444,11 @@ $(document).ready(function() {
     }
     $(this).text(chrome.i18n.getMessage(airport));
   });
+
+  //tutorial
+  $('#tutorial').on('click', function() {
+    tutorial.start();
+  });
+  localStorage.getItem('tutorial') === null && tutorial.start();
 });
 

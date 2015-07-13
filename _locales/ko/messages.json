@@ -103,5 +103,32 @@
   },
   "KPO": {
     "message": "포항"
+  },
+  "tutorialRecommend": {
+    "message": "새 탭이 열리면 가까운 시일에 가장 괜찮은<br>가격대의 왕복 항공편을 가져옵니다."
+  },
+  "tutorialLegend": {
+    "message": "아래 달력의 색깔은 해당일의 가장 저렴한 항공편의 가격을 나타냅니다."
+  },
+  "tutorialDepart": {
+    "message": "날짜 위에 마우스를 올리면 가격과 출발 시간이 나타납니다.<br>마음에 드는 날짜를 선택해 보세요."
+  },
+  "tutorialReturn": {
+    "message": "색이 도착편에 맞게 바뀌었습니다.<br>이제 도착 날짜를 하나 골라보세요."
+  },
+  "tutorialCheck": {
+    "message": "방금 선택한 항공편의 정보를 확인하세요."
+  },
+  "tutorialBook": {
+    "message": "이제 예약하기 버튼을 눌러 예약페이지로 이동해 볼까요?"
+  },
+  "prev": {
+    "message": "이전"
+  },
+  "next": {
+    "message": "다음"
+  },
+  "finish": {
+    "message": "완료"
   }
 }

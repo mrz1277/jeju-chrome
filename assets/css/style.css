@@ -422,3 +422,14 @@ tr:first-child {
     font-size: 14px;
     margin-right: 20px;
 }
+
+/* Trip */
+
+.trip-content {
+    font-size: 14px;
+}
+
+.trip-prev, .trip-next {
+    font-size: 12px;
+    color: #337ab7;
+}
