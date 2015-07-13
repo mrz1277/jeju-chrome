@@ -254,7 +254,11 @@ var tutorial = new Trip([
     sel: 'a.btn-tickets',
     content: chrome.i18n.getMessage('tutorialBook'),
     position: 'e',
-    showNavigation : true
+    showNavigation : true,
+    onTripEnd: function() {
+      localStorage.setItem('tutorial', 'done');
+      _gaq.push(["_trackEvent", "tutorial", "done"]);
+    }
   }
 ], {
   delay: -1,
