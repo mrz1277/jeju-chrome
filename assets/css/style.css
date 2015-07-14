@@ -426,10 +426,16 @@ tr:first-child {
 /* Trip */
 
 .trip-content {
-    font-size: 14px;
+    font-size: 15px;
+    margin-bottom: 10px;
+    line-height: 1.4em;
 }
 
 .trip-prev, .trip-next {
-    font-size: 12px;
+    font-size: 15px;
     color: #337ab7;
+}
+
+.trip-prev:hover, .trip-next:hover {
+    color: #4b97d8;
 }
