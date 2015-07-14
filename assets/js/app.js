@@ -42,10 +42,17 @@ var WT = {
       $("#refreshLocation").on("click", function() {
         WT.refreshOriginAirport().done(WT.nextDeal);
       });
+      $('option').each(function() {
+        var airport = $(this).attr('value');
+        if (WT.originAirport.iata_code === airport) {
+          $(this).attr('selected', 'selected');
+        }
+        $(this).text(chrome.i18n.getMessage(airport));
+      });
+      _gaq.push(["_trackEvent", "newTab", "opened", WT.originAirport.iata_code]);
       done();
     });
 
-    WT.originAirport && _gaq.push(["_trackEvent", "newTab", "opened", WT.originAirport.iata_code]);
     _gaq.push(["_trackPageview"]);
   },
   getOriginAirport: function() {
@@ -192,6 +199,9 @@ var WT = {
     $("#deal").addClass("visible");
     WT.hideLoader();
     WT.initializing = false;
+
+    //show tutorial
+    localStorage.getItem('tutorial') === null && tutorial.start();
   },
   removeOldDeals: function(deals) {
     var oldDeals = [];
@@ -449,6 +459,10 @@ $(document).ready(function() {
     });
   });
 
+  $('#tutorial').on('click', function() {
+    tutorial.start();
+  });
+
   // i18n
   // find elements has data-message attribute, replace content to i18n
   var objects = document.getElementsByTagName('*'), i;
@@ -457,19 +471,5 @@ $(document).ready(function() {
       objects[i].innerHTML = chrome.i18n.getMessage(objects[i].dataset.message);
     }
   }
-
-  $('option').each(function() {
-    var airport = $(this).attr('value');
-    if (WT.originAirport.iata_code === airport) {
-      $(this).attr('selected', 'selected');
-    }
-    $(this).text(chrome.i18n.getMessage(airport));
-  });
-
-  //tutorial
-  $('#tutorial').on('click', function() {
-    tutorial.start();
-  });
-  localStorage.getItem('tutorial') === null && tutorial.start();
 });
 
