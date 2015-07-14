@@ -45,7 +45,7 @@ var WT = {
       done();
     });
 
-    _gaq.push(["_trackEvent", "newTab", "opened", WT.originAirport.iata_code]);
+    WT.originAirport && _gaq.push(["_trackEvent", "newTab", "opened", WT.originAirport.iata_code]);
     _gaq.push(["_trackPageview"]);
   },
   getOriginAirport: function() {
