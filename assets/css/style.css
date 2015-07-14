@@ -283,6 +283,8 @@ a.photo-credits .credits-text, a.photo-location .location-text {
     width: 365px;
     height: 185px;
     display: inline-block;
+
+    -webkit-animation-duration: 0.7s;
 }
 
 .cal-heatmap-container .graph-label {

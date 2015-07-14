@@ -293,7 +293,6 @@ var tutorial = new Trip([
   }
 });
 
-
 $(document).ready(function() {
   WT.init(function() {
     _cal.init({
@@ -364,6 +363,12 @@ $(document).ready(function() {
         return departPrice;
       },
       onClick: function(date, value) {
+        //ignore no flight day
+        if (value === null) {
+          animate('#cal-heatmap', 'shake');
+          return;
+        }
+
         var flightData = _clickedDate ? JSON.parse(localStorage.getItem("returnFlight"))
           : JSON.parse(localStorage.getItem("departFlight"));
         var dateData = _clickedDate ? JSON.parse(localStorage.getItem("returnDate"))
@@ -389,6 +394,12 @@ $(document).ready(function() {
           }
           // 도착일 선택됨
           else {
+            // depart date must be precede with return date
+            if (moment(date).isBefore(_clickedDate)) {
+              animate('#cal-heatmap', 'shake');
+              return;
+            }
+
             WT.highlightCalendar(_clickedDate, date); // highlight from depart to return date
             WT.setContent('return', dateFormat, value, chrome.i18n.getMessage("CJU"), chrome.i18n.getMessage(WT.originAirport.iata_code)); // set return table contents
 
@@ -471,5 +482,13 @@ $(document).ready(function() {
       objects[i].innerHTML = chrome.i18n.getMessage(objects[i].dataset.message);
     }
   }
+
+  // animate
+  $('#cal-heatmap').on('webkitAnimationEnd', function() {
+    $(this).removeClass();
+  });
 });
 
+function animate(sel, effect) {
+  $(sel).addClass('animated ' + effect);
+}
