@@ -181,8 +181,11 @@ var WT = {
     if (deal.photo.name) {
       $("#deal a.photo-location span").text(deal.photo.name);
       if (deal.photo.latitude && deal.photo.longitude) {
-        var url = 'http://map.naver.com/?menu=location&mapMode=0&lat=' +
-          deal.photo.latitude + '&lng=' + deal.photo.longitude + '&dlevel=11&enc=b64';
+        var url = 'http://map.naver.com/?dlevel=11&enc=b64' +
+          '&x=' + deal.photo.latitude +
+          '&y=' + deal.photo.longitude +
+          (deal.photo.place_id ? '&pinType=site&pinId=' + deal.photo.place_id : '');
+
         $("#deal a.photo-location")
           .css("display", "block")
           .attr("href", url)
