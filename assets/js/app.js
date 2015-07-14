@@ -190,7 +190,7 @@ var WT = {
             _gaq.push(['_trackEvent', 'location', 'clicked', deal.photo.external_link]);
           });
       } else {
-        $("#deal a.photo-location").css("border", "none").css("cursor", "none");
+        $("#deal a.photo-location").css("border", "none").css("cursor", "text").find('.fa').hide();
       }
     } else {
       $("#deal a.photo-location").css("display", "none");
