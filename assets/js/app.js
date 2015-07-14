@@ -244,37 +244,43 @@ var tutorial = new Trip([
     sel: 'table',
     content: chrome.i18n.getMessage('tutorialRecommend'),
     position: 'e',
-    showNavigation : true
+    showNavigation : true,
+    animation: 'bounceIn'
   },
   {
     sel: '.cal-legend',
     content: chrome.i18n.getMessage('tutorialLegend'),
     position: 'n',
-    showNavigation : true
+    showNavigation : true,
+    animation: 'fadeIn'
   },
   {
     sel: '#cal-heatmap',
     content: chrome.i18n.getMessage('tutorialDepart'),
     position: 'w',
-    showNavigation: false
+    showNavigation: false,
+    animation: 'fadeIn'
   },
   {
     sel: '#cal-heatmap',
     content: chrome.i18n.getMessage('tutorialReturn'),
     position: 'w',
-    showNavigation: false
+    showNavigation: false,
+    animation: 'fadeIn'
   },
   {
     sel: 'table',
     content: chrome.i18n.getMessage('tutorialCheck'),
     position: 'e',
-    showNavigation : true
+    showNavigation : true,
+    animation: 'fadeIn'
   },
   {
     sel: 'a.btn-tickets',
     content: chrome.i18n.getMessage('tutorialBook'),
     position: 'e',
     showNavigation : true,
+    animation: 'fadeIn',
     onTripEnd: function() {
       localStorage.setItem('tutorial', 'done');
       _gaq.push(["_trackEvent", "tutorial", "done"]);
@@ -282,7 +288,7 @@ var tutorial = new Trip([
   }
 ], {
   delay: -1,
-  enableAnimation: false,
+  enableAnimation: true,
   showCloseBox : true,
   prevLabel: chrome.i18n.getMessage('prev'),
   nextLabel: chrome.i18n.getMessage('next'),
