@@ -56,7 +56,7 @@ body {
     text-align: center;
     margin-bottom: 100px; }
 .main h1 {
-    font-family: 궁서, Gungseo;
+    font-family: 궁서, Gungseo, 'UnGungseoWeb';
     font-size: 36px;
     font-weight: 600;
     line-height: 56px;
@@ -67,7 +67,7 @@ body {
     margin-top: 130px;
     margin-bottom: 70px; }
 .main h2 {
-    font-family: 궁서, Gungseo;
+    font-family: 궁서, Gungseo, 'UnGungseoWeb';
     font-size: 24px;
     font-weight: 300;
     line-height: 42px;
