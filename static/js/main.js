@@ -16,6 +16,6 @@ if (window.chrome && window.navigator.vendor === 'Google Inc.') {
 var links = document.querySelectorAll('a');
 for (var i = 0; i < links.length; i++) {
   links[i].addEventListener('click', function trackButton(e) {
-    ga('send', 'event', e.target.id, 'clicked');
+    ga('send', 'event', e.target.href, 'clicked');
   });
 }
