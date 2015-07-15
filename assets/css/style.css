@@ -193,11 +193,15 @@ header .col-right {
     padding: 0.3em 1em;
     color: #FFF;
     text-decoration: none;
-    width: 76px;
+    width: 90px;
     height: 44px;
     display: table-cell;
     vertical-align: middle;
     cursor: default;
+}
+
+.btn-tickets small {
+    display: block;
 }
 
 .btn-tickets.available {
