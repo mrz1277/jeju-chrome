@@ -181,8 +181,11 @@ var WT = {
     if (deal.photo.name) {
       $("#deal a.photo-location span").text(deal.photo.name);
       if (deal.photo.latitude && deal.photo.longitude) {
-        var url = 'http://map.naver.com/?menu=location&mapMode=0&lat=' +
-          deal.photo.latitude + '&lng=' + deal.photo.longitude + '&dlevel=11&enc=b64';
+        var url = 'http://map.naver.com/?dlevel=11&enc=b64' +
+          '&x=' + deal.photo.latitude +
+          '&y=' + deal.photo.longitude +
+          (deal.photo.place_id ? '&pinType=site&pinId=' + deal.photo.place_id : '');
+
         $("#deal a.photo-location")
           .css("display", "block")
           .attr("href", url)
@@ -190,7 +193,7 @@ var WT = {
             _gaq.push(['_trackEvent', 'location', 'clicked', deal.photo.external_link]);
           });
       } else {
-        $("#deal a.photo-location").css("border", "none").css("cursor", "none");
+        $("#deal a.photo-location").css("border", "none").css("cursor", "text").find('.fa').hide();
       }
     } else {
       $("#deal a.photo-location").css("display", "none");
@@ -244,37 +247,43 @@ var tutorial = new Trip([
     sel: 'table',
     content: chrome.i18n.getMessage('tutorialRecommend'),
     position: 'e',
-    showNavigation : true
+    showNavigation : true,
+    animation: 'bounceIn'
   },
   {
     sel: '.cal-legend',
     content: chrome.i18n.getMessage('tutorialLegend'),
     position: 'n',
-    showNavigation : true
+    showNavigation : true,
+    animation: 'fadeIn'
   },
   {
     sel: '#cal-heatmap',
     content: chrome.i18n.getMessage('tutorialDepart'),
     position: 'w',
-    showNavigation: false
+    showNavigation: false,
+    animation: 'fadeIn'
   },
   {
     sel: '#cal-heatmap',
     content: chrome.i18n.getMessage('tutorialReturn'),
     position: 'w',
-    showNavigation: false
+    showNavigation: false,
+    animation: 'fadeIn'
   },
   {
     sel: 'table',
     content: chrome.i18n.getMessage('tutorialCheck'),
     position: 'e',
-    showNavigation : true
+    showNavigation : true,
+    animation: 'fadeIn'
   },
   {
     sel: 'a.btn-tickets',
     content: chrome.i18n.getMessage('tutorialBook'),
     position: 'e',
     showNavigation : true,
+    animation: 'fadeIn',
     onTripEnd: function() {
       localStorage.setItem('tutorial', 'done');
       _gaq.push(["_trackEvent", "tutorial", "done"]);
@@ -282,7 +291,7 @@ var tutorial = new Trip([
   }
 ], {
   delay: -1,
-  enableAnimation: false,
+  enableAnimation: true,
   showCloseBox : true,
   prevLabel: chrome.i18n.getMessage('prev'),
   nextLabel: chrome.i18n.getMessage('next'),
@@ -292,7 +301,6 @@ var tutorial = new Trip([
     _gaq.push(["_trackEvent", "tutorial", "step-" + i]);
   }
 });
-
 
 $(document).ready(function() {
   WT.init(function() {
@@ -364,6 +372,12 @@ $(document).ready(function() {
         return departPrice;
       },
       onClick: function(date, value) {
+        //ignore no flight day
+        if (value === null) {
+          animate('#cal-heatmap', 'shake');
+          return;
+        }
+
         var flightData = _clickedDate ? JSON.parse(localStorage.getItem("returnFlight"))
           : JSON.parse(localStorage.getItem("departFlight"));
         var dateData = _clickedDate ? JSON.parse(localStorage.getItem("returnDate"))
@@ -389,6 +403,12 @@ $(document).ready(function() {
           }
           // 도착일 선택됨
           else {
+            // depart date must be precede with return date
+            if (moment(date).isBefore(_clickedDate)) {
+              animate('#cal-heatmap', 'shake');
+              return;
+            }
+
             WT.highlightCalendar(_clickedDate, date); // highlight from depart to return date
             WT.setContent('return', dateFormat, value, chrome.i18n.getMessage("CJU"), chrome.i18n.getMessage(WT.originAirport.iata_code)); // set return table contents
 
@@ -471,5 +491,13 @@ $(document).ready(function() {
       objects[i].innerHTML = chrome.i18n.getMessage(objects[i].dataset.message);
     }
   }
+
+  // animate
+  $('#cal-heatmap').on('webkitAnimationEnd', function() {
+    $(this).removeClass();
+  });
 });
 
+function animate(sel, effect) {
+  $(sel).addClass('animated ' + effect);
+}
