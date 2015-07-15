@@ -1,6 +1,6 @@
 # 제주 가기 좋은 날
 
-![라디오스타](https://s3-ap-northeast-1.amazonaws.com/jeju/ras.gif)
+![main](http://mrz1277.github.io/jeju-chrome/static/images/main.png)
 
 여행의 기준을 일정이 아니라 비용에 방점을 두고, 제주를 좀 더 가깝게 느끼고자 만든 크롬 익스텐션입니다.
 
