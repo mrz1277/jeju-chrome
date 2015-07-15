@@ -10,6 +10,7 @@
       "js": [
         "assets/lib/jquery/dist/jquery.min.js",
         "assets/lib/moment/min/moment.min.js",
+        "assets/js/ga.js",
         "assets/js/content.js"
       ]
     }
