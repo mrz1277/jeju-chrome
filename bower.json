@@ -16,7 +16,8 @@
     "jquery-modal": "~0.5.2",
     "jquery-number": "~2.1.5",
     "trip.js": "~3.1.0",
-    "animate.css": "~3.3.0"
+    "animate.css": "~3.3.0",
+    "lodash": "~3.10.1"
   },
   "resolutions": {
     "jquery": "~2.1.3"

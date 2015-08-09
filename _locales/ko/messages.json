@@ -130,5 +130,14 @@
   },
   "finish": {
     "message": "완료"
+  },
+  "ignorePhotoList": {
+    "message": "배경 건너뛰기"
+  },
+  "addPhoto": {
+    "message": "현재 배경 추가"
+  },
+  "removePhotos": {
+    "message": "선택 배경 삭제"
   }
 }

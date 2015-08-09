@@ -122,7 +122,9 @@ var WT = {
   getDeal: function() {
     var deferred = $.Deferred();
 
-    $.getJSON(BASE + "/deal?airport=" + WT.originAirport.iata_code).done(function(deal) {
+    var ignore = _.pluck(JSON.parse(localStorage.getItem('ignoredPhotos')), '_id').join();
+
+    $.getJSON(BASE + "/deal?airport=" + WT.originAirport.iata_code + '&ignore=' + ignore).done(function(deal) {
       deal.timeStamp = Date.now();
       WT.preLoadDealImage(deal);
       deferred.resolve(deal);
@@ -202,6 +204,8 @@ var WT = {
     $("#deal").addClass("visible");
     WT.hideLoader();
     WT.initializing = false;
+
+    localStorage.setItem('currentDeal', JSON.stringify(deal));
 
     //show tutorial
     localStorage.getItem('tutorial') === null && tutorial.start();
@@ -495,6 +499,45 @@ $(document).ready(function() {
   // animate
   $('#cal-heatmap').on('webkitAnimationEnd', function() {
     $(this).removeClass();
+  });
+
+  // ignore backgrounds
+  var ignore = localStorage.getItem('ignoredPhotos');
+  var $list = $('#ignorePhotoList');
+  if (ignore) {
+    JSON.parse(ignore).forEach(function(photo) {
+      $list.append('<option value="' + photo._id + '">' + photo.name + '(' + photo.author + ')</option>');
+    });
+  } else {
+    ignore = '[]';
+    localStorage.setItem('ignoredPhotos', ignore);
+  }
+
+  $('#addPhoto').on('click', function() {
+    var ignore = localStorage.getItem('ignoredPhotos');
+    var currentDeal = JSON.parse(localStorage.getItem('currentDeal'));
+    var photo = currentDeal.photo;
+    $list.append('<option value="' + photo._id + '">' + photo.name + '(' + photo.author + ')</option>');
+
+    var ignoredPhotos = JSON.parse(ignore);
+    ignoredPhotos.push(photo);
+    localStorage.setItem('ignoredPhotos', JSON.stringify(ignoredPhotos));
+  });
+
+  $('#removePhotos').on('click', function() {
+    var ignore = localStorage.getItem('ignoredPhotos');
+    var ignoredPhotos = JSON.parse(ignore);
+
+    $list.val() && $list.val().forEach(function(selectedItem) {
+      ignoredPhotos.forEach(function(photo) {
+        if (photo._id === selectedItem) {
+          $list.find('option[value="' + photo._id + '"]').remove();
+
+          _.remove(ignoredPhotos, { _id: photo._id });
+          localStorage.setItem('ignoredPhotos', JSON.stringify(ignoredPhotos));
+        }
+      });
+    });
   });
 });
 

@@ -21,6 +21,7 @@
   <script src="assets/lib/jquery-number/jquery.number.min.js"></script>
   <script src="assets/lib/jquery-modal/jquery.modal.min.js"></script>
   <script src="assets/lib/trip.js/dist/trip.js"></script>
+  <script src="assets/lib/lodash/lodash.min.js"></script>
   <script src="assets/js/app.js"></script>
 
 </head>
@@ -90,21 +91,31 @@
 <div class="modal" id="modal-settings" style="display:none;">
   <h3 data-message="settings"></h3>
   <div class="form-group">
-    <label for="selectAirport" data-message="changeAirport"></label>
-    <select id="selectAirport">
-      <option value="KWJ"></option>
-      <option value="KUV"></option>
-      <option value="GMP"></option>
-      <option value="TAE"></option>
-      <option value="MWX"></option>
-      <option value="PUS"></option>
-      <option value="HIN"></option>
-      <option value="RSU"></option>
-      <option value="USN"></option>
-      <option value="WJU"></option>
-      <option value="CJJ"></option>
-      <option value="KPO"></option>
-    </select>
+    <div class="setting">
+      <label for="selectAirport" data-message="changeAirport"></label>
+      <select id="selectAirport">
+        <option value="KWJ"></option>
+        <option value="KUV"></option>
+        <option value="GMP"></option>
+        <option value="TAE"></option>
+        <option value="MWX"></option>
+        <option value="PUS"></option>
+        <option value="HIN"></option>
+        <option value="RSU"></option>
+        <option value="USN"></option>
+        <option value="WJU"></option>
+        <option value="CJJ"></option>
+        <option value="KPO"></option>
+      </select>
+    </div>
+    <div class="setting">
+      <label for="ignorePhotoList" data-message="ignorePhotoList"></label>
+      <select multiple id="ignorePhotoList"></select>
+      <div class="ignore-button-group">
+        <button type="button" data-message="addPhoto" id="addPhoto"></button>
+        <button type="button" data-message="removePhotos" id="removePhotos"></button>
+      </div>
+    </div>
   </div>
   <div class="button-group">
     <button type="button" data-message="confirm" class="btn-settings-confirm"></button>
